@@ -1,0 +1,93 @@
+<div class="row clearfix">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Estado</strong> Planes de Pago Comerciales</h2>
+      </div>
+      <div class="header">
+        <h2><strong>Consultar</strong> Cuotas</h2>
+      </div>
+      <div class="body">
+        <form [formGroup]="formBoletas">
+          <div class="row clearfix">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <label for="cuotaDesde">Cuota Desde</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" class="form-control" id="cuotaDesde" formControlName="cuotaDesde" readonly
+                         placeholder="Año desde" #cuotaDesde>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <label for="cuotaHasta">Cuota Hasta</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" class="form-control" id="cuotaHasta" formControlName="cuotaHasta" readonly
+                         placeholder="Año hasta" #cuotaHasta>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <button type="button" class="btn btn-primary btn-lg m-l-15 waves-effect" (click)="consultarPeriodo()">Consultar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="body" *ngIf="boletas">
+        <div class="table-responsive m-t-40" *blockUI="'carga-boletas-pago'">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="text-center">Cuota</th>
+              <th class="text-center">Fecha vencimiento</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center"></th> <!--Jsilva, Incidente 109245 -->
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngIf="boletas.length > 0; else noBoletas">
+              <ng-container *ngFor="let boleta of boletas">
+                <tr>
+                  <td class="text-center">{{boleta.cuota}}</td>
+                  <td class="text-center">{{boleta.fechaVencimientoOriginal}}</td>
+                  <!--Jsilva, Incidente 109245 -->
+                  <td class="text-center">{{boleta.estadoCuota}}</td>
+                  <td>
+                    <ng-container *ngIf="boleta.estadoCuota === null || boleta.estadoCuota === ''"> 
+                      <app-loading-button
+                          [title]="'Imprimir'"
+                          [loading]="loadingImprimir && bol === boletaImprimir"
+                          [type]="'button'"
+                          (click)="imprimir(boleta)"
+                          [additionalClass]="'btn-sm btn-info'"
+                        ></app-loading-button>
+                    </ng-container>
+                  </td>
+                  <!--<button class="btn bg-red btn-circle waves-effect waves-circle waves-float"
+                          type="button"
+                          *ngIf="boleta.estadoCuota === null "> 
+                    <i class="material-icons">print</i>
+                  </button>
+                  <ng-container *ngIf="boleta.estadoCuota !== null "> 
+                    Cuota Cancelada
+                  </ng-container>                  
+                  </td>-->
+                  <!--Fin Jsilva, Incidente 109245 -->
+                </tr>
+              </ng-container>
+            </ng-container>
+            <ng-template #noBoletas>
+              <tr>
+                <td colspan="12" class="text-center">No se encontraron datos para el período seleccionado</td>
+              </tr>
+            </ng-template>
+            </tbody>
+          </table>
+        </div>
+        <p>"Toda información obtenida a través de este Portal está sujeta a verificación."</p>
+      </div>
+    </div>
+  </div>
+</div>

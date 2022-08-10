@@ -1,0 +1,73 @@
+<div class="row clearfix" *ngIf="ready">
+  <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Inscripciones</strong></h2>
+      </div>
+      <div class="body">
+        <small class="text-muted">Contribuyente:</small>
+        <p>{{actividad.razonSocial}}</p>
+        <hr>
+        <small class="text-muted">CUIT:</small>
+        <p>{{actividad.cuit}}</p>
+        <hr>
+        <small class="text-muted">Fecha Inscripción:</small>
+        <p>{{actividad.fechaInscripcion ? actividad.fechaInscripcion : '---'}}</p>
+        <hr>
+        <small class="text-muted">Posee Actividades en Otro Municipio:</small>
+        <p>{{actividad.actividadOtroMunicipio ? actividad.actividadOtroMunicipio : '---'}}</p>
+        <hr>
+        <small class="text-muted">Cantidad locales en Sede:</small>
+        <p>{{actividad.cantidadLocalesSede ? actividad.cantidadLocalesSede : '---'}}</p>
+        <hr>
+        <small class="text-muted">Cantidad locales en Otros:</small>
+        <p>{{actividad.cantidadLocalesOtro ? actividad.cantidadLocalesOtro : '---'}}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Impuestos</strong> Inscriptos</h2>
+      </div>
+      <div class="body">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let impuesto of impuestosInscriptos">{{impuesto.impuestoDescripcion}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="header">
+        <h2><strong>Lista</strong> de Actividades</h2>
+      </div>
+      <div class="body">
+        <div class="table-responsive m-t-40">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="text-center">Actividad</th>
+              <th class="text-center">Fecha inicio</th>
+              <th class="text-center">Fecha fin</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngIf="actividadesInscriptas.length > 0; else noActividades">
+              <tr *ngFor="let act of actividadesInscriptas">
+                <td class="text-center">{{act.actividad}}</td>
+                <td class="text-center">{{act.desde}}</td>
+                <td class="text-center">{{act.hasta}}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noActividades>
+              <tr>
+                <td colspan="3" class="text-center">No hay actividades registradas</td>
+              </tr>
+            </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

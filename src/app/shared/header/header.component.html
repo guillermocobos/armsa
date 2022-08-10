@@ -1,0 +1,92 @@
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header" style="padding: 0">
+      <a href="#" onClick="return false;" class="navbar-toggle collapsed" data-toggle="collapse"
+         data-target="#navbar-collapse" aria-expanded="false"></a>
+      <a href="#" onClick="return false;" class="bars"></a>
+      <a class="navbar-brand" href="http://municipalidadsalta.gob.ar/" style="height: 100%; padding: 0" target="_blank">
+        <img src="assets/images/logo_municipalidad.png" style="height: 60px" alt="" />
+      </a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li routerLinkActive="active">
+          <a routerLink="inicio">
+            Inicio
+          </a>
+        </li>
+        <li>
+          <a href="#" onClick="return false;">
+            Sobre ARMSA
+          </a>
+        </li>
+        <li>
+          <a href="http://municipalidadsalta.gob.ar/guia-de-tramites/" target="_blank">
+            Guía de Trámites
+          </a>
+        </li>
+        <li *ngIf="user" routerLinkActive="active">
+          <a routerLink="/clave-fiscal/inicio">
+            Menu Comerciales
+          </a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li style="height: 60px;">
+
+          <a class="navbar-brand" (click)="descargarInstructivo()" style="height: 60px; margin: 0 5px; padding: 0">
+            <img src="assets/images/armsa-mobile.jpg" style="height:60px" alt="" title="Descargá pdf"/>
+          </a>
+        </li>
+
+        <li style="height: 60px;">
+
+          <a class="navbar-brand" (click)="descargarInstructivo()" style="height: 80px; margin: 0 5px; padding: 0">
+            <label style="color: white; margin-right: 10px; font-size: 11px" alt="" src=""><br>Descargá Instructivo<br>“ARMSa Mobile”  y pagá </label>
+          </a>
+        </li>
+
+
+        <!-- Full Screen Button
+        <li class="fullscreen">
+          <a href="javascript:;" class="fullscreen-btn">
+            <i class="nav-hdr-btn ti-fullscreen"></i>
+          </a>
+        </li> -->
+
+        <li style="height: 60px;">
+
+        <a class="navbar-brand" href="index.html"style="height: 60px; margin: 0 5px; padding: 0">
+          <img src="assets/images/armsa.png" style="height:60px" alt="" />
+        </a>
+        </li>
+
+        <!--<li><a routerlink="auth/login" href="#/auth/login" *ngIf="!user"><i class="fas fa-door-open col-red-armsa"></i> Acceso con Clave Fiscal</a></li>
+        <li class="dropdown user_profile" *ngIf="user">
+          <div class="dropdown-toggle" data-toggle="dropdown">
+            <div class="loggedUser">Usuario: {{user}}</div>
+          </div>
+          <ul class="dropdown-menu pullDown">
+            <li class="header">Opciones</li>
+            <li class="body">
+              <ul class="user_dw_menu">
+                <li>
+                  <a href="#" onClick="return false;">
+                    <i class="material-icons">person</i>Datos de contribuyente
+                  </a>
+                </li>
+                <li>
+                  <a (click)="logout()">
+                    <i class="material-icons">power_settings_new</i>Desconectar
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>-->
+
+
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,155 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix" *ngIf="mostrarOPEConsolidadas">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>CONSULTA DE DDJJ</strong> - PUBLICIDAD Y PROPAGANDA</h2>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Volver'"
+              [type]="'button'"
+              routerLink="/clave-fiscal/publicidad-propaganda/"
+            ></app-loading-button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+
+            <div class="table-responsive m-t-15">
+              <table class="table table-hover" datatable id="tabla-ddjjs"
+                     [dtOptions]="dtOptions"
+                     [dtTrigger]="dtTrigger"
+                     #tablaInspeccion
+              >
+                <thead>
+                <tr>
+                  <th class="center">Imprimir</th>
+                  <th class="center">Nro. OPE</th>
+                  <th class="center">Identificación</th>
+                  <th class="center">Fecha Operación</th>
+                  <th class="center">C.B.U / Medio Pago</th>
+                  <th class="center">Impuesto</th>
+                  <th class="center">Monto Total</th>
+                  <th class="center">Estado</th>
+                  <th class="center">Estado Transferencias</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let ddjj of ddjjs">
+                  <td class="center">
+                    <button class="btn btn-info btn-circle waves-effect waves-circle waves-float"
+                            type="button" (click)="consultarDetalleOPEConsolidadas(ddjj)"
+                            >
+                      <i class="material-icons">print</i>
+                    </button>
+                  </td>
+                  <td class="center">
+                    {{ddjj.numeroOpe}}
+                  </td>
+                  <td class="center">
+
+                  </td>
+                  <td class="center">
+                    <span>{{ddjj.fechaOperacion | date: 'yyyyMMdd'}}</span>{{ddjj.fechaOperacion | date: 'dd/MM/yyyy' }}
+                  </td>
+                  <td class="center">
+                    {{ddjj.numeroCbu}}
+                  </td>
+                  <td class="center">
+                    {{ddjj.impuestoAbrev + ' / ' + ddjj.conceptoObligacionAbrev}}
+                  </td>
+                  <td class="center">
+                    {{ddjj.suma ? ddjj.suma.toFixed(2) : '0.00' }}
+                  </td>
+                  <td class="center">
+                    {{ddjj.rechazada === 'S' ? 'Rechazada' : 'Aceptada'}}
+                  </td>
+                  <td class="center">
+                    {{ddjj.estadoIb}}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix" *ngIf="mostrarDetallesOPEConsolidadas">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>CONSULTA</strong> - DE ESTADO O.P.E.M</h2>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Volver'"
+              [type]="'button'"
+              (click)="volver()"
+            ></app-loading-button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos-detalles'">
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive m-t-15">
+                  <table class="table table-hover" datatable id="tabla-detalles-ddjj"
+                         [dtOptions]="dtOptionsDetalles"
+                         [dtTrigger]="dtTriggerDetalles"
+                         #tablaInspeccion
+                  >
+                    <thead>
+                    <tr>
+                      <th class="center">Nro. OPE</th>
+                      <th class="center">Impuesto</th>
+                      <th class="center">Nro. Rectificativa</th>
+                      <th class="center">Período</th>
+                      <th class="center">Monto Deuda</th>
+                      <th class="center">Monto O.P.E.M</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let detalle of detalles">
+                      <td class="center">
+                        {{detalle.numeroOpe}}
+                      </td>
+                      <td class="center">
+                        {{detalle.impuestoAbrev + ' / ' + detalle.conceptoObligacionAbrev}}
+                      </td>
+                      <td class="center">
+                        {{detalle.numeroRectificativa}}
+                      </td>
+                      <td class="center">
+                        {{detalle.periodoDescripcion}}
+                      </td>
+                      <td class="center">
+                        {{detalle.montoDeuda ? detalle.montoDeuda.toFixed(2) : '0.00'}}
+                      </td>
+                      <td class="center">
+                        {{detalle.montoAPagar ? detalle.montoAPagar.toFixed(2) : '0.00'}}
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <app-loading-button *ngIf="detalles.length > 0"
+                                    [buttonColor]="'info'"
+                                    [title]="'Imprimir Constancia Provisoria'"
+                                    [type]="'button'"
+                                    [loading]="loadingImprimir"
+                                    (click)="imprimirConstanciaProvisoria()"
+                ></app-loading-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+

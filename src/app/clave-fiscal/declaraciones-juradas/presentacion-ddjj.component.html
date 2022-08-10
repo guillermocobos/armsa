@@ -1,0 +1,205 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Declaraciones</strong> Juradas</h2>
+          </div>
+          <div class="body">
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="body">
+                    <p>Sr. Contribuyente siga los siguientes pasos para la presentación de DDJJ:</p>
+                    <ol>
+                      <li>Con el botón EXAMINAR ubique el archivo de la DDJJ.</li>
+                      <li>Presione el botón CARGAR para que los datos sean verificados.</li>
+                      <li>Presione el botón PRESENTAR para el proceso de la información.</li>
+                    </ol>
+                    <p>
+                      Para Imprimir el Acuse de Recibo, Ud. puede usar las siguientes opciones:<br/>
+                      "Consulta de Presentaciones Realizadas" o "Imprimir Acuse", este botón sólo imprime los acuse de
+                      las presentaciones hechas durante su SESIÓN ACTUAL.
+                    </p>
+                    <div class="alert alert-warning">
+                      Sr. Contribuyente antes de efectuar la presentación de su Declaración Jurada verifique los datos
+                      registrados en la opción DATOS DEL CONTRIBUYENTE
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header">
+            <h2><strong>Presentación</strong> de Declaraciones Juradas</h2>
+          </div>
+          <div class="body">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="body">
+                    <div class="row clearfix">
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="header">
+                          <h2><strong>Carga</strong> de Declaraciones Juradas</h2>
+                        </div>
+                        <div class="body">
+                          <form [formGroup]="formDDJJ" novalidate enctype="multipart/form-data">
+                            <div class="form-group">
+                              <div class="file-field input-field">
+                                <div class="btn">
+                                  <span>Seleccionar Archivo</span>
+                                  <input #file type="file" (change)="onFileChange($event)" formControlName="ddjjFile">
+                                </div>
+                                <div class="file-path-wrapper">
+                                  <input class="file-path validate" type="text" #fileWrapper>
+                                </div>
+                              </div>
+                              <ng-container *ngIf="submitted && f.ddjjFile.errors">
+                                <label class="error" *ngIf="f.ddjjFile.errors.required">Debe seleccionar un archivo</label>
+                                <label class="error" *ngIf="f.ddjjFile.errors.customError">{{f.ddjjFile.errors.customError}}</label>
+                              </ng-container>
+                              <ng-container *ngIf="submitted && errorGeneralCarga">
+                                <label class="error">{{errorGeneralCarga}}</label>
+                              </ng-container>
+                            </div>
+                            <app-loading-button
+                              [title]="'Cargar'"
+                              [loading]="loading"
+                              [type]="'button'"
+                              (click)="cargarDDJJ()"
+                            ></app-loading-button>
+                          </form>
+
+                          <div class="modal fade" id="validarCargaDDJJ" tabindex="-1" role="dialog" #validarCargaModal
+                               aria-labelledby="formModal" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="insertarInstalacionTitulo">Carga DDJJ</h5>
+                                  <button type="button" class="close" data-dismiss="modal" (click)="cerrarValidarCargaModal()"
+                                          aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  <p>
+                                    {{mensajeValidarCarga}}
+                                  </p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-danger waves-effect"
+                                          data-dismiss="modal" (click)="cerrarValidarCargaModal()">Cerrar
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <ng-container *ngIf="ddjjs.length > 0">
+                          <div class="header">
+                            <h2><strong>Declaraciones Juradas</strong> Cargadas</h2>
+                          </div>
+                          <div class="body">
+                            <div class="table-responsive">
+                              <table class="table table-hover"
+                                     #tablaDDJJ
+                              >
+                                <thead>
+                                <tr>
+                                  <th class="center">DDJJ Cargada</th>
+                                  <th class="center">Quitar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let ddjj of ddjjs; let idx = index">
+                                  <td class="center" [innerHTML]="ddjj.textoPresentacionCarga"></td>
+                                  <td class="center">
+                                    <button class="btn btn-sm bg-light-blue waves-effect" type="button"
+                                            (click)="quitarDdjj(idx)"
+                                    >
+                                      Quitar
+                                    </button>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <app-loading-button
+                              *ngIf="ddjjs.length > 0"
+                              [title]="'Presentar DDJJs'"
+                              [loading]="loadingPresentar"
+                              [type]="'button'"
+                              (click)="presentarDDJJ()"
+                            ></app-loading-button>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="ddjjsPresentadas.length > 0 || errorGeneralPresentacion || intimacionesProcom">
+                          <div class="header">
+                            <h2><strong>Declaraciones Juradas</strong> Presentadas</h2>
+                          </div>
+                          <div class="body">
+                            <div class="alert alert-danger" *ngIf="errorGeneralPresentacion" [innerHTML]="errorGeneralPresentacion"></div>
+                            <div class="alert alert-danger" *ngIf="intimacionesProcom" [innerHTML]="intimacionesProcom"></div>
+                            <div class="alert alert-info" *ngIf="ddjjsPresentadas.length > 0">
+                              Señor contribuyente, para poder pagar la DDJJ proceda a imprimir el comprobante : F976P, F2001P, F986P, F988P (Según corresponda) desde la opción: Consulta de cuenta única y boleta de pago.-
+                            </div>
+                            <div class="table-responsive" *ngIf="ddjjsPresentadas.length > 0">
+                              <table class="table table-hover"
+                                     #tablaDDJJ
+                              >
+                                <thead>
+                                <tr>
+                                  <th class="center">DDJJ Presentada</th>
+                                  <th class="center">Acuse Recibo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let acuse of ddjjsPresentadas; let idx = index">
+                                  <td class="center" [innerHTML]="acuse.ddjj.textoPresentacion"></td>
+                                  <td class="center">
+                                    <app-loading-button
+                                      [title]="'Imprimir'"
+                                      [loading]="loadingImprimirDDJJ && acuseActivo.transaccionId == acuse.transaccionId"
+                                      [type]="'button'"
+                                      (click)="imprimirAcuse(acuse)"
+                                      [additionalClass]="'btn-sm btn-info'"
+                                    ></app-loading-button>
+                                  </td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <app-loading-button
+                              *ngIf="ddjjsPresentadas.length > 0"
+                              [title]="'Imprimir Todo'"
+                              [loading]="loadingImprimirTodo"
+                              [type]="'button'"
+                              (click)="imprimirTodo()"
+                            ></app-loading-button>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="header">
+            <h2><strong>Consulta</strong> de Declaraciones Juradas</h2>
+          </div>
+          <div class="body">
+            <app-consulta-ddjj></app-consulta-ddjj>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

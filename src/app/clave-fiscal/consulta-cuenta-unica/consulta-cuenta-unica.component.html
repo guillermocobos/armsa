@@ -1,0 +1,183 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <h2>Consulta de <strong>Cuenta única</strong> y <strong>Boletas de Pago</strong></h2>
+            </div>
+            <div class="body" *blockUI="'visualizar-datos'">
+              <h5><span class="font-underline">CUIT:</span> {{contribuyente.cuit}}</h5>
+              <h5><span class="font-underline">Nombre Completo:</span> {{contribuyente.nombre_completo}}</h5>
+              <br/>
+              <p class="col-pink">
+                <span class="font-underline">Impresión:</span> Antes de imprimir sus resúmenes de "Estado de deuda" o "Estado de deuda de Planes de Pago" corrija todos los márgenes
+                de impresión de su explorador a un máximo de 5mm para hojas A4".</p>
+              <!-- Nav tabs -->
+              <div class="row clearfix" *ngIf="mostrarVolver">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <p class="pull-right">
+                    <button type="button" class="btn btn-primary btn-small" (click)="volverListado()">Volver</button>
+                  </p>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <ng-container *ngIf="mostrarListado">
+                    <ul class="nav nav-tabs" role="tablist">
+                      <li role="presentation">
+                        <a href="#home_with_icon_title" [ngClass]="{'active show': activeTab === tabInscripciones}" (click)="changeTab(tabInscripciones)" data-toggle="tab" class="active show">
+                          <i class="material-icons">receipt</i> INSCRIPCIONES
+                        </a>
+                      </li>
+                      <li role="presentation">
+                        <a href="#profile_with_icon_title" [ngClass]="{'active show': activeTab === tabPlanes}" (click)="changeTab(tabPlanes)" data-toggle="tab">
+                          <i class="material-icons">credit_card</i> PLANES DE PAGO
+                        </a>
+                      </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane fade in" [ngClass]="{'active show': activeTab === tabInscripciones}" id="home_with_icon_title">
+                        <div class="table-responsive">
+                          <table class="table table-hover dashboard-task-infos" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" #tablaInscripciones>
+                            <thead>
+                            <tr>
+                              <th>Identificación</th>
+                              <th class="center">Ver Datos</th>
+                              <th class="center">Estado Deuda</th>
+                              <th class="center">Boletas de Pago</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                              <tr *ngFor="let insc of inscripciones">
+                                <td>{{insc.identificacion2}}</td>
+                                <td class="center">
+                                  <button class="btn bg-green waves-effect" type="button" (click)="consultarDatosInscripcion(insc)"><i class="fas fa-list-ul"></i></button>
+                                </td>
+                                <td class="center">
+                                  <button class="btn bg-amber waves-effect" type="button" (click)="consultarEstadoDeuda(insc)"><i class="fas fa-money-check"></i></button>
+                                </td>
+                                <td class="center">
+                                  <button class="btn btn-info waves-effect" type="button" (click)="consultarBoletas(insc)"><i class="fas fa-money-check-alt"></i></button>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" [ngClass]="{'active show': activeTab === tabPlanes}" id="profile_with_icon_title">
+                        <div class="table-responsive">
+                          <table class="table table-hover dashboard-task-infos" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" #tablaPlanes>
+                            <thead>
+                            <tr>
+                              <th>Identificación</th>
+                              <th class="center"></th>
+                              <th class="center">Estado Deuda</th>
+                              <th class="center">Boletas de Pago</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let plan of planes">
+                              <td>{{plan.identificacion}}</td>
+                              <td class="center">
+
+                              </td>
+                              <td class="center">
+                                <button class="btn bg-amber waves-effect" type="button" (click)="consultarEstadoDeudaPlan(plan)"><i class="fas fa-money-check"></i></button>
+                              </td>
+                              <td class="center">
+                                <button *ngIf="plan.caduco === '0'" class="btn btn-info waves-effect" type="button" (click)="consultarBoletasPlan(plan)"><i class="fas fa-money-check-alt"></i></button>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <app-datos-inscripcion
+                    [tipoImponible]="tipoImponibleSelected"
+                    [claveImponible]="claveImponibleSelected"
+                    (datosCargados)="blockVisualizarDatos.stop()"
+                    *ngIf="mostrarDatosInscripcion"
+                  ></app-datos-inscripcion>
+
+                  <app-estado-deuda
+                    [tipoImponible]="tipoImponibleSelected"
+                    [claveImponible]="claveImponibleSelected"
+                    [impuesto]="impuestoSelected"
+                    (datosCargados)="blockVisualizarDatos.stop()"
+                    *ngIf="mostrarEstadoDeuda"
+                  ></app-estado-deuda>
+
+                  <app-boleta-pago
+                    [tipoImponible]="tipoImponibleSelected"
+                    [claveImponible]="claveImponibleSelected"
+                    [impuesto]="impuestoSelected"
+                    (datosCargados)="blockVisualizarDatos.stop()"
+                    *ngIf="mostrarBoletas"
+                  ></app-boleta-pago>
+
+                  <app-estado-deuda-planes
+                    [planFacilidad]="planFacilidadSelected"
+                    (datosCargados)="blockVisualizarDatos.stop()"
+                    *ngIf="mostrarEstadoDeudaPlanes"
+                  ></app-estado-deuda-planes>
+
+                  <app-boleta-pago-planes
+                    [planFacilidad]="planFacilidadSelected"
+                    [identificacion]="identificacionPlanSelected"
+                    (datosCargados)="blockVisualizarDatos.stop()"
+                    *ngIf="mostrarBoletasPlanes"
+                    ></app-boleta-pago-planes>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="boletaPagoModal" tabindex="-1" role="dialog" #boletaPagoModal
+     aria-labelledby="formModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formBoletaPagoModal">Estado de Deuda</h5>
+        <button type="button" class="close" data-dismiss="modal"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="formBoleta">
+          <label for="mesAnioDesde">Desde</label>
+          <div class="form-group">
+            <div class="form-line">
+              <input type="text" class="datepicker form-control" id="mesAnioDesde" formControlName="mesAnioDesde" readonly
+                     placeholder="Mes - Año desde">
+
+            </div>
+          </div>
+          <label for="mesAnioHasta">Hasta</label>
+          <div class="form-group">
+            <div class="form-line">
+              <input type="text" class="datepicker form-control" id="mesAnioHasta" formControlName="mesAnioHasta" readonly
+                     placeholder="Mes - Año hasta">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info waves-effect">Consultar</button>
+        <button type="button" class="btn btn-danger waves-effect"
+                data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

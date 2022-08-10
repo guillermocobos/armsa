@@ -1,0 +1,208 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>CONSULTA DE TRANSACCIONES ELECTRÓNICAS</strong></h2>
+          </div>
+          <div class="body">
+            <form id="form_transacciones" method="POST" [formGroup]="form" (ngSubmit)="buscar()">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                  <label for="periodoDesde">Desde</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control datepicker" readonly formControlName="periodoDesde"
+                        id="periodoDesde" placeholder="Ingrese la fecha inicial a consultar" />
+                    </div>
+                    <ng-container *ngIf="submitted && f.periodoDesde.errors">
+                      <label class="error" *ngIf="f.periodoDesde.errors.required">Debe ingresar el período desde</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                  <label for="periodoHasta">Hasta</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control datepicker" readonly formControlName="periodoHasta"
+                        id="periodoHasta" placeholder="Ingrese la fecha final a consultar" />
+                    </div>
+                    <ng-container *ngIf="submitted && f.periodoHasta.errors">
+                      <label class="error" *ngIf="f.periodoHasta.errors.required">Debe ingresar el período hasta</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <app-loading-button [title]="'Buscar'" [loading]="loading"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix" *blockUI="'visualizar-datos'">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="body">
+            <div class="table-responsive m-t-40">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th class="text-center">Número Operación</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">C.B.U. / Medio de Pago</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-center">Tipo Operacion</th>
+                    <th class="text-center">Total Operacíón</th>
+                    <th class="text-center">Info</th>
+                    <th class="text-center">Anular Solicitud de Pago</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngIf="transacciones.length > 0; else notransacciones">
+                    <tr *ngFor="let tra of transacciones">
+                      <td class="text-center">{{ tra.identificacion }}</td>
+                      <td class="text-center">
+                        {{ tra.fechaOperacion | date: "dd/MM/yyyy" }}
+                      </td>
+                      <td class="text-center">{{ tra.descripcion }}</td>
+                      <td class="text-center">{{ tra.rechazada }}</td>
+                      <td class="text-center">{{ tra.tipoOperacion }}</td>
+                      <td class="text-center">
+                        {{ tra.totalOperacion | number: "1.0-2" }}
+                      </td>
+                      <td>
+                        <button class="btn btn-info btn-circle waves-effect waves-circle waves-float" type="button"
+                          (click)="
+                            onClickDetalle(
+                              tra.identificacion,
+                              tra.tipoOperacion
+                            )
+                          ">
+                          <i class="material-icons">search</i>
+                        </button>
+                      </td>
+                      <td class="text-center">
+                        <ng-container *ngIf="
+                            tra.tipoOperacion == 'BANELCO' &&
+                            tra.rechazada == 'N'
+                          ">
+                          <button class="btn btn-info btn-circle waves-effect waves-circle waves-float" type="button"
+                            (click)="anularPagoModal(tra)">
+                            <i class="material-icons">delete</i>
+                          </button>
+                        </ng-container>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <ng-template #notransacciones>
+                    <tr>
+                      <td colspan="4" class="text-center">
+                        No hay transacciones registradas para esta búsqueda
+                      </td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal fade" id="modalDetalle" role="dialog" #modalDetalle aria-labelledby="infoCuentaTitulo"
+  data-dismiss="modal">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoCuentaTitulo">
+          DETALLE DE PAGO ELECTRÓNICO
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModalDetalle()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="body">
+        <div class="table-responsive m-t-40">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th class="text-center">Operación</th>
+                <th class="text-center">Identificación</th>
+                <th class="text-center">Impuesto</th>
+                <th class="text-center">Concepto</th>
+                <th class="text-center">Rectificativa</th>
+                <th class="text-center">Periodo</th>
+                <th class="text-center">Monto Operación</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="transaccionesDetalle.length > 0; else notransacciones">
+                <tr *ngFor="let det of transaccionesDetalle">
+                  <td class="text-center">{{ det.numeroOperacion }}</td>
+                  <td class="text-center">{{ det.identificacion }}</td>
+                  <td class="text-center">{{ det.impuestoAbrev }}</td>
+                  <td class="text-center">{{ det.impuesto }}</td>
+                  <td class="text-center">{{ det.rectificativa }}</td>
+                  <td class="text-center">{{ det.periodo }}</td>
+                  <td class="text-center">
+                    {{ det.montoOperacion | number: "1.0-2" }}
+                  </td>
+                </tr>
+              </ng-container>
+              <ng-template #notransacciones>
+                <tr>
+                  <td colspan="4" class="text-center">
+                    No hay transacciones registradas para esta búsqueda
+                  </td>
+                </tr>
+              </ng-template>
+              <div class="modal-footer">
+                <!--td class="text-center">{{ tra.tipoOperacion }}</td-->
+                <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal"
+                  (click)="closeModalDetalle()">
+                  Cerrar
+                </button>
+              </div>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" #modalAnularPago aria-labelledby="formModal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formActualizarEmail">Anular Solicitud de Pago</h5>
+        <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalAnularPago()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" *ngIf="transaccionSeleccionada">
+        ¿Está seguro de querer anular la solicitud de pago de la transaccion
+        {{ transaccionSeleccionada.identificacion }}?
+      </div>
+      <div class="modal-footer">
+        <app-loading-button [title]="'Anular Solicitud'" [loading]="loadingAnularPago" [type]="'button'"
+          (click)="anularPago()" [buttonColor]="'info'" [additionalClass]="'m-l-10'"></app-loading-button>
+        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal"
+          (click)="cerrarModalAnularPago()">
+          Cancelar
+        </button>
+      </div>
+      <div class="alert alert-danger" *ngIf="errorGeneral">
+        {{errorGeneral}}
+      </div>
+      <div class="alert alert-success" *ngIf="mensajeExitoso">
+        {{mensajeExitoso}}
+      </div>
+    </div>
+  </div>
+</div>

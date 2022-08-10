@@ -1,0 +1,125 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <ng-container *ngIf="!cambiarPassword">
+
+        <div class="col-lg-8 col-md-8 hidden-for-small-down">
+          <div class="card transparent">
+            <img src="assets/images/armsa/frente.jpg" style="height: 400px;"/>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="card" >
+                <div class="header">
+                  <label>Ingresar a ARMSa</label>
+                </div>
+            <div class="header">
+              Colocá tu  CUIL ó CUIT y clave fiscal*
+            </div>
+
+
+            <div class="body">
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <label for="usuario">Usuario</label>
+                <div class="form-group">
+                  <div class="form-line">
+                    <input type="text" id="usuario" class="form-control" formControlName="usuario"
+                           placeholder="Ingrese su usuario"
+                    >
+                    <ng-container *ngIf="submitted && f.usuario.errors">
+                      <label class="error" *ngIf="f.usuario.errors.required">Debe ingresar su usuario</label>
+                    </ng-container>
+                  </div>
+                </div>
+
+                <label for="password">Contraseña</label>
+                <div class="form-group">
+                  <div class="form-line">
+                    <input type="password" id="password" class="form-control" formControlName="password"
+                           placeholder="Ingrese su contraseña"
+                    >
+                    <ng-container *ngIf="submitted && f.password.errors">
+                      <label class="error" *ngIf="f.password.errors.required">Debe ingresar su contraseña</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="alert alert-danger" *ngIf="errorLogin">
+                  {{errorLogin}}
+                </div>
+                <div class="container-login100-form-btn">
+                  <app-loading-button [title]="'Ingresar'" [loading]="loading"></app-loading-button>
+                </div>
+                <div>
+                  <label style="font-size: 12px">
+                    <br>
+                    *La clave se genera concurriendo al CCM, salón 2, planta baja, ARMSa, respetando los días correspondientes a la finalización del DNI
+                  </label>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="col-lg-8 col-md-8 offset-lg-2 offset-md-2 col-sm-12 col-xs-12" *ngIf="cambiarPassword">
+        <div class="card">
+          <div class="header">
+            <strong>Cambio</strong> de Clave
+          </div>
+          <div class="body">
+            <form [formGroup]="formChangePassword" (ngSubmit)="onSubmitCambiarPassword()">
+              <label for="usuario">Usuario</label>
+              <div class="form-group">
+                {{form.get('usuario').value}}
+              </div>
+
+              <label for="password">Contraseña actual</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="password" id="password_actual" class="form-control" formControlName="password_actual"
+                         placeholder="Ingrese su contraseña actual"
+                  >
+                  <ng-container *ngIf="submitted && fn.password_actual.errors">
+                    <label class="error" *ngIf="fn.password_actual.errors.required">Debe ingresar su contraseña actual</label>
+                  </ng-container>
+                </div>
+              </div>
+              <label for="password">Nueva contraseña</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="password" id="nuevo_password" class="form-control" formControlName="nuevo_password"
+                         placeholder="Ingrese su nueva contraseña"
+                  >
+                  <span class="helper-text">La contraseña debe contener entre 4 y 8 letras o números y no debe contener caracteres especiales</span>
+                  <ng-container *ngIf="submitted && fn.nuevo_password.errors">
+                    <label class="error" *ngIf="fn.nuevo_password.errors.required">Debe ingresar su nueva contraseña</label>
+                  </ng-container>
+                </div>
+              </div>
+              <label for="password">Repita la nueva contraseña</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="password" id="repite_password" class="form-control" formControlName="repite_password"
+                         placeholder="Repita su nueva contraseña"
+                  >
+                  <ng-container *ngIf="submitted && fn.repite_password.errors">
+                    <label class="error" *ngIf="fn.repite_password.errors.required">Debe repetir la nueva contraseña</label>
+                    <label class="error" *ngIf="fn.repite_password.errors.passwordMatch">Las contraseñas ingresadas no coinciden</label>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="alert alert-danger" *ngIf="errorCambiarPassword">
+                {{errorCambiarPassword}}
+              </div>
+              <div class="container-login100-form-btn">
+                <app-loading-button [title]="'Cambiar'" [loading]="loading" [disabled]="!formChangePassword.valid"></app-loading-button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

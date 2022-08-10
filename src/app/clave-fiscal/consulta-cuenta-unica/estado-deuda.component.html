@@ -1,0 +1,123 @@
+<div class="row clearfix">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Estado</strong> de Deuda</h2>
+      </div>
+      <div class="body" *ngIf="cabeceraLibreDeuda">
+        <div class="row clearfix">
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <small class="text-muted">Identificación:</small>
+            <p>{{cabeceraLibreDeuda.identificacionLarga}}</p>
+            <hr>
+            <small class="text-muted">Contribuyente:</small>
+            <p>{{cabeceraLibreDeuda.razonSocial}}</p>
+            <hr>
+            <small class="text-muted">Fecha Baja:</small>
+            <p>{{cabeceraLibreDeuda.fechaBaja ? cabeceraLibreDeuda.fechaBaja : '---'}}</p>
+            <hr>
+          </div>
+          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <small class="text-muted">Fecha Emisión:</small>
+            <p>{{cabeceraLibreDeuda.fechaEmision}}</p>
+            <hr>
+            <small class="text-muted">Documento:</small>
+            <p>{{cabeceraLibreDeuda.tipoDocumento + ' ' + cabeceraLibreDeuda.numeroDocumento}}</p>
+            <hr>
+            <small class="text-muted">Motivo Baja:</small>
+            <p>{{cabeceraLibreDeuda.motivoBaja ? cabeceraLibreDeuda.motivoBaja : '---'}}</p>
+            <hr>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-warning alert-dismissible" role="alert" *ngIf="intimacionProcom">
+        <!--<button aria-label="Close" class="close" data-dismiss="alert" type="button"><span aria-hidden="true">×</span></button>-->
+          <h6><strong>Advertencia para el Contribuyente</strong></h6>
+          <p>
+            Sr. Contribuyente según nuestros registros informáticos Ud. Posee Requerimientos y/o Notificaciones Legales a la fecha,
+            por tal motivo deberá apersonarse a nuestras oficinas Sito en calle Vicente López 428, Planta Baja
+          </p>
+      </div>
+      <div class="header">
+        <h2><strong>Consultar</strong> Períodos</h2>
+      </div>
+      <div class="body">
+        <form [formGroup]="formDeuda">
+          <div class="row clearfix">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <label for="anioDesde">Desde</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" class="datepicker form-control" id="anioDesde" formControlName="anioDesde" readonly
+                         placeholder="Año desde" #anioDesde>
+
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <label for="anioHasta">Hasta</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" class="datepicker form-control" id="anioHasta" formControlName="anioHasta" readonly
+                         placeholder="Año hasta" #anioHasta>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+              <button type="button" class="btn btn-primary btn-lg m-l-15 waves-effect" (click)="consultarPeriodo()">Consultar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="header" *ngIf="conceptoImpuesto">
+        <h2><strong>Impuesto: </strong>{{conceptoImpuesto}}</h2>
+      </div>
+      <div class="body" *ngIf="cabeceraLibreDeuda && estadoDeudaImp">
+        <div class="table-responsive m-t-40" *blockUI="'carga-estado-deuda'">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="text-center">Año</th>
+              <th class="text-center">Período</th>
+              <th class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible !== '0005'">Rectif.</th>
+              <th class="text-center">Fecha vto.</th>
+              <th class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible !== '0005'">Presentación</th>
+              <th class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible === '0005'">Moneda</th>
+              <th class="text-center">Importe a pagar</th>
+              <th class="text-center">Importe pagado</th>
+              <th class="text-center">Fecha pago</th>
+              <th class="text-center">Importe actualizado</th>
+              <th class="text-center">Estado</th>
+              <th class="text-center">Observaciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngIf="estadoDeudaImp.length > 0; else noEstadoDeuda">
+              <tr *ngFor="let estado of estadoDeudaImp">
+                <td class="text-center">{{estado.anio}}</td>
+                <td class="text-center">{{estado.numeroCuota}}</td>
+                <td class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible !== '0005'">{{estado.numeroRectificativa}}</td>
+                <td class="text-center">{{estado.fechaVencimiento}}</td>
+                <td class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible !== '0005'">{{estado.fechaPresentacion}}</td>
+                <td class="text-center" *ngIf="cabeceraLibreDeuda.tipoImponible === '0005'">{{estado.moneda}}</td>
+                <td class="text-center">{{cabeceraLibreDeuda.tipoImponible === '0005' ? estado.monedaAbrev : ''}}{{estado.importeAPagar}}</td>
+                <td class="text-center">{{estado.importePagado}}</td>
+                <td class="text-center">{{estado.fechaPago}}</td>
+                <td class="text-center">{{estado.importeActualizado}}</td>
+                <td class="text-center">{{estado.estadoCuota}}</td>
+                <td class="text-center">{{estado.observaciones}}</td>
+              </tr>
+            </ng-container>
+            <ng-template #noEstadoDeuda>
+              <tr>
+                <td colspan="12" class="text-center">No se encontraron datos para el período seleccionado</td>
+              </tr>
+            </ng-template>
+            </tbody>
+          </table>
+        </div>
+        <p>"Toda información obtenida a través de este Portal está sujeta a verificación."</p>
+      </div>
+    </div>
+  </div>
+</div>

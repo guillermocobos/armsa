@@ -1,0 +1,177 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="block-header">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <ul class="breadcrumb breadcrumb-style">
+            <li class="breadcrumb-item"><h4 class="page-title">Solicitud Libre de Deuda</h4></li>
+            <li class="breadcrumb-item bcrumb-1">
+              <a routerLink="/clave-fiscal/inicio" href="javascript:void(0);">
+              <i class="fas fa-home"></i> Menu Comerciales</a></li>
+            <li class="breadcrumb-item bcrumb-2">
+              <a routerLink="/clave-fiscal/libre-deudas">Libre de Deudas</a></li>
+            <li class="breadcrumb-item active">Solicitud Libre de Deuda</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>SOLICITUD <strong>LIBRE DE DEUDA</strong></h2>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+            <form id="form_solicitud" method="POST" [formGroup]="form" (ngSubmit)="generarSolicitud()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label>Fecha Solicitud</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      {{ fechaHoy }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label>Nombre Solicitante</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      {{ contribuyente.razon_social }}
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label>CUIT</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      {{contribuyente.cuit}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="fechaCalculo">Fecha Cálculo</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" class="form-control datepicker" formControlName="fechaCalculo" id="fechaCalculo" readonly>
+                      <ng-container *ngIf="submitted && fa.fechaCalculo.errors">
+                        <label class="error" *ngIf="fa.fechaCalculo.errors.required">Debe seleccionar una fecha de cálculo</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label>DNI</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      {{contribuyente.nro_documento}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="tipoCertificado">Tipo de Certificado</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="tipoCertificado" class="form-control" formControlName="tipoCertificado" (change)="getTiposImponibles($event)">
+                        <option value="" [selected]="true" disabled>Seleccione un Tipo de Certificado</option>
+                        <option value="L">Libre de Deuda</option>
+                        <option value="R">Regularización Fiscal</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && fa.tipoCertificado.errors">
+                      <label class="error" *ngIf="fa.tipoCertificado.errors.required">Debe seleccionar un Tipo de Certificado</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="tipoImponible">Tipo Imponible</label>
+                  <div class="form-group">
+                    <div class="form-line input-field" *blockUI="'get-tipos-imponibles'">
+                      <select id="tipoImponible" class="form-control" formControlName="tipoImponible" (change)="getImponibles($event)">
+                        <option value="" [selected]="true" disabled >{{tiposImponibles.length === 0 ? 'Seleccione primero un Tipo de Certificado' : 'Seleccione un Tipo Imponible' }}</option>
+                        <option *ngFor="let tipoImponible of tiposImponibles" value="{{tipoImponible.tipoImponible}}">{{tipoImponible.tipoImponibleDescr}}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && fa.tipoImponible.errors">
+                      <label class="error" *ngIf="fa.tipoImponible.errors.required">Debe seleccionar un Tipo de Imponible</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="imponible">Imponible</label>
+                  <div class="form-group">
+                    <div class="form-line input-field" *blockUI="'get-imponibles'">
+                      <select id="imponible" class="form-control" formControlName="imponible" [size]="imponibles.length > 0 ? 8 : 0">
+                        <option value="" [selected]="true" disabled *ngIf="imponibles.length === 0">Seleccione primero un Tipo Imponible</option>
+                        <option *ngFor="let imponible of imponibles" value="{{imponible.clave}}">{{imponible.col01}}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && fa.imponible.errors">
+                      <label class="error" *ngIf="fa.imponible.errors.required">Debe seleccionar un Imponible</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="lugarPresentacion">Para presentar en</label>
+                  <div class="form-group">
+                    <div class="form-line ">
+                      <input type="text" class="form-control" formControlName="lugarPresentacion" id="lugarPresentacion">
+                      <ng-container *ngIf="submitted && fa.lugarPresentacion.errors">
+                        <label class="error" *ngIf="fa.lugarPresentacion.errors.required">Debe ingresar un lugar de presentación</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <button type="button" class="btn btn-info waves-effect m-t-15" routerLink="/clave-fiscal/libre-deudas">Cancelar</button>
+              <app-loading-button [title]="'Generar'" [loading]="loading" [additionalClass]="'m-l-15'"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="mensaje" tabindex="-1" role="dialog" #mostrarMensajeModal
+         aria-labelledby="formModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mensajeTitulo">Generar Certificado</h5>
+            <button type="button" class="close" data-dismiss="modal" (click)="cerrarModal()"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              {{mensajeGenerarCertificado}}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal" (click)="!certificadoGenerado ? cerrarModal() : volver()">Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+

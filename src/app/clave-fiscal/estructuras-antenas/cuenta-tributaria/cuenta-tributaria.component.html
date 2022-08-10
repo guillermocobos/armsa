@@ -1,0 +1,82 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>ESTRUCTURAS DE SOPORTE</strong> DE ANTENAS</h2>
+            <button type="button" class="btn btn-info m-t-15 waves-effect pull-right" routerLink="/clave-fiscal/estructuras-antenas">Volver</button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+            <div class="table-responsive">
+              <table class="table table-hover" datatable
+                     [dtOptions]="dtOptions"
+                     [dtTrigger]="dtTrigger"
+                     #tablainstalacion
+              >
+                <thead>
+                <tr>
+                  <th class="center">Período</th>
+                  <th class="center">Estructura ID</th>
+                  <th class="center">Concepto</th>
+                  <th class="center">Importe</th>
+                  <th class="center">Estado</th>
+                  <th class="center">Saldo</th>
+                  <th class="center">Fecha pago</th>
+                  <th class="center">Metros adicionales</th>
+                  <th class="center">Boleta</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let cuenta of cuentas; let idx = index;">
+                  <td class="center">
+                    {{cuenta.anio}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.estructuraId}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.descripcionConcepto}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.importe}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.estado}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.fechaActualizacion}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.fechaPago}}
+                  </td>
+                  <td class="center">
+                    {{cuenta.metrosAdicionalesImporte}}
+                  </td>
+                  <td class="center">
+                    <app-loading-button *ngIf="cuenta.estado === 'PENDIENTE'"
+                      [title]="'Imprimir'"
+                      [loading]="loadingImprimir && cuentaImprimir && cuentaImprimir.estructuraId === cuenta.estructuraId && indexImprimir === idx"
+                      [type]="'button'"
+                      (click)="imprimir(cuenta, idx)"
+                      [additionalClass]="'btn-sm'"
+                      [marginTop]="''"
+                      [replaceLoading]="true"
+                    ></app-loading-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+

@@ -1,0 +1,423 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix" *ngIf="!mostrarFormAgregarEstructura">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>ESTRUCTURAS DE SOPORTE</strong> DE ANTENAS</h2>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Agregar Estructura'"
+              [type]="'button'"
+              (click)="onMostrarFormAgregarEstructura()"
+              [additionalClass]="'pull-left'"
+            ></app-loading-button>
+            <button type="button" class="btn btn-info m-t-15 waves-effect pull-right" routerLink="/clave-fiscal/estructuras-antenas/tasa-inspeccion">Tasa de Inspección</button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+            <div class="table-responsive" *ngIf="!mostrarFormAgregarEstructura">
+              <table class="table table-hover" datatable
+                     [dtOptions]="dtOptions"
+                     [dtTrigger]="dtTrigger"
+                     #tablainstalacion
+              >
+                <thead>
+                <tr>
+                  <th class="center">Estructura ID</th>
+                  <th class="center">Latitud</th>
+                  <th class="center">Longitud</th>
+                  <th class="center">Cant. Sistemas de Antenas</th>
+                  <th class="center">Tipo Estructura</th>
+                  <th class="center">Dirección</th>
+                  <th class="center">Modificar</th>
+                  <th class="center">Fecha Baja</th>
+                  <th class="center">Eliminar Estructura</th>
+                  <th class="center">Emitir Constancia</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let instalacion of instalaciones">
+                  <td class="center">
+                    {{instalacion.estructuraId}}
+                  </td>
+                  <td class="center">
+                    {{instalacion.latitud}}
+                  </td>
+                  <td class="center">
+                    {{instalacion.longitud}}
+                  </td>
+                  <td class="center">
+                    <ng-container
+                      *ngIf="!mostrarEdit || (instalacionActiva && instalacionActiva.estructuraId !== instalacion.estructuraId)">
+                      {{instalacion.cantAntenas}}
+                    </ng-container>
+                    <input type="number" class="form-control" autoFocus2
+                           value="{{instalacion.cantAntenas}}"
+                           [(ngModel)]="newEditValue"
+                           *ngIf="instalacionActiva && instalacionActiva.estructuraId === instalacion.estructuraId && mostrarEdit"/>
+                  </td>
+                  <td class="center">
+                    {{instalacion.abrevTipoEstructuras}}
+                  </td>
+                  <td class="center">
+                    {{instalacion.calle + ' ' + instalacion.puerta}}
+                  </td>
+                  <td class="center">
+                    <button class="btn btn-sm bg-light-blue waves-effect" type="button" (click)="modificarModal(instalacion)"
+                            *ngIf="instalacion.fechaBaja === null && (!mostrarEdit || (instalacionActiva && instalacionActiva.estructuraId !== instalacion.estructuraId))"
+                    >
+                      Modificar
+                    </button>
+
+                    <div role="group" class="btn-group">
+                      <app-loading-button
+                        *ngIf="instalacionActiva && instalacionActiva.estructuraId === instalacion.estructuraId && mostrarEdit"
+                        [title]="'Grabar'"
+                        [loading]="loadingEdit"
+                        [type]="'button'"
+                        (click)="guardarModificacion(instalacion)"
+                        [additionalClass]="'btn-sm'"
+                        [marginTop]="''"
+                        [replaceLoading]="true"
+                      ></app-loading-button>
+                      <button class="btn btn-sm bg-grey waves-effect" type="button" (click)="cancelar(instalacion)"
+                              *ngIf="instalacionActiva && instalacionActiva.estructuraId === instalacion.estructuraId  && mostrarEdit && !loadingEdit"
+                      >
+                        Cancelar
+                      </button>
+                    </div>
+
+                  </td>
+                  <td class="center">
+                    {{instalacion.fechaBaja}}
+                  </td>
+                  <td class="center">
+                    <button class="btn btn-sm bg-light-blue waves-effect" type="button"
+                            (click)="verificarDeuda(instalacion)"
+                            *ngIf="instalacion.fechaBaja === null"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                  <td class="center">
+                    <app-loading-button
+                      [title]="'Imprimir'"
+                      [loading]="loadingImprimir && instalacionActiva && instalacionActiva.estructuraId === instalacion.estructuraId"
+                      [type]="'button'"
+                      (click)="imprimir(instalacion)"
+                      [additionalClass]="'btn-sm'"
+                      [marginTop]="''"
+                      [replaceLoading]="true"
+                    ></app-loading-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="modificarInstalacion" tabindex="-1" role="dialog" #modificarInstalacionModal
+         aria-labelledby="formModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modificar Instalación</h5>
+            <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalModificacion()"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {{mostrarMensajeModificar}}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info waves-effect" (click)="modificar(instalacionActiva)">Aceptar</button>
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal" (click)="cerrarModalModificacion()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="eliminarInstalacion" tabindex="-1" role="dialog" #eliminarInstalacionModal
+         aria-labelledby="formModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="formActualizarEmail">Eliminar Instalación</h5>
+            <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalEliminacion()"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form [formGroup]="formEliminar" *ngIf="mostrarFormEliminar">
+              <label for="motivo">Motivo de Eliminación</label>
+              <div class="form-group">
+                <div class="form-line">
+              <textarea rows="4" id="motivo" class="form-control no-resize" formControlName="motivoEliminacion"
+                        placeholder="Ingrese el motivo de eliminación" maxlength="300"></textarea>
+
+                  <ng-container *ngIf="submittedEliminar && fe.motivoEliminacion.errors">
+                    <label class="error" *ngIf="fe.motivoEliminacion.errors.required">Debe ingresar un motivo de
+                      eliminación</label>
+                  </ng-container>
+                </div>
+              </div>
+            </form>
+            <p *ngIf="mostrarMensajeEliminar">
+              {{mostrarMensajeEliminar}}
+            </p>
+          </div>
+          <div class="modal-footer">
+            <app-loading-button
+              *ngIf="mostrarFormEliminar"
+              [title]="'Aceptar'"
+              [loading]="loadingEliminar"
+              [type]="'button'"
+              (click)="eliminarInstalacion(instalacionActiva)"
+              [buttonColor]="'info'"
+              [additionalClass]="'m-l-10'"
+              [disabled]="!formEliminar.valid"
+            ></app-loading-button>
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal" (click)="cerrarModalEliminacion()">{{mostrarFormEliminar ? 'Cancelar' : 'Cerrar'}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="insertarInstalacion" tabindex="-1" role="dialog" #agregarEstructuraModal
+         aria-labelledby="formModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="insertarInstalacionTitulo">Agregar Estructura</h5>
+            <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalAgregarEstructura()"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Se ha agregado la estructura correctamente
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal" (click)="cerrarModalAgregarEstructura()">Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix" *ngIf="mostrarFormAgregarEstructura">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>AGREGAR <strong>ESTRUCTURA</strong></h2>
+          </div>
+          <div class="body">
+            <form id="form_consulta_ddjj" method="POST" [formGroup]="formAgregarEstructura" (ngSubmit)="agregarEstructura()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="ocm">Operador de Comunicación Movil (OCM)</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="ocm" class="form-control" formControlName="ocm" (change)="onOcmChange($event)">
+                        <option value="1">SI</option>
+                        <option value="2" [selected]="true">NO</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submittedAgregarEstructura && fa.ocm.errors">
+                      <label class="error" *ngIf="fa.ocm.errors.required">Debe seleccionar si es o no un OCM</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="row clearfix" *ngIf="mostrarCuit">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="cuit">CUIT</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="cuit" id="cuit"
+                             placeholder="Ingrese el CUIT" maxlength="11" inputInteger>
+                    </div>
+                    <ng-container *ngIf="submittedConsultaCuit">
+                      <ng-container *ngIf="fa.cuit.errors">
+                        <label class="error" *ngIf="fa.cuit.errors.cuit">El número de CUIT ingresado es inválido</label>
+                      </ng-container>
+                      <label class="error" *ngIf="errorBuscarRazonSocial">{{errorBuscarRazonSocial}}</label>
+                    </ng-container>
+                    <ng-container *ngIf="submittedAgregarEstructura && fa.cuit.errors">
+                      <label class="error" *ngIf="fa.cuit.errors.required">Debe ingresar el CUIT</label>
+                    </ng-container>
+                    <app-loading-button
+                      [title]="'Buscar'"
+                      [loading]="loadingCuit"
+                      [disabled]="!fa.cuit.value || fa.cuit.value.length < 11"
+                      (clickButton)="buscarRazonSocial()"
+                    ></app-loading-button>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="mostrarRazonSocial">
+                  <label for="razonSocial">Razón Social</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="razonSocial" id="razonSocial" readonly>
+                    </div>
+                    <ng-container *ngIf="submittedAgregarEstructura && fa.razonSocial.errors">
+                      <label class="error" *ngIf="fa.razonSocial.errors.required">Debe tener una Razón Social, busque a través del CUIT</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label>Fecha Solicitud</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      {{ fechaHoy }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="latitud">Latitud</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="latitud" class="form-control"
+                             formControlName="latitud"
+                             placeholder="Ingrese la Latitud" inputNumber
+                      >
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.latitud.errors">
+                        <label class="error" *ngIf="fa.latitud.errors.required">Debe ingresar la Latitud</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="longitud">Longitud</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="longitud" class="form-control"
+                             formControlName="longitud"
+                             placeholder="Ingrese la Longitud" inputNumber
+                      >
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.longitud.errors">
+                        <label class="error" *ngIf="fa.longitud.errors.required">Debe ingresar la Longitud</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="calle">Calle</label>
+                  <div class="form-group">
+                    <div class="form-line input-field" *blockUI="'cargando-calles'">
+                      <select id="calle" class="form-control" formControlName="calle">
+                          <option value="" [selected]="true" disabled>{{calles.length > 0 ? 'Seleccione una calle' : 'Cargando calles... Espere por favor.'}}</option>
+                          <option *ngFor="let calle of calles" value="{{calle}}">{{calle}}</option>
+                      </select>
+
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.calle.errors">
+                        <label class="error" *ngIf="fa.calle.errors.required">Debe seleccionar una calle</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="puerta">Puerta</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="puerta" id="puerta"
+                             placeholder="Ingrese el numero de puerta">
+                    </div>
+                    <ng-container *ngIf="submittedAgregarEstructura && fa.puerta.errors">
+                      <label class="error" *ngIf="fa.puerta.errors.required">Debe ingresar el numero de puerta</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="tipoEstructura">Tipo Estructura</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="tipoEstructura" class="form-control" formControlName="tipoEstructura" (change)="recalcularValorAprobacion()">
+                        <option value="" [selected]="true" disabled>Seleccione un Tipo de Estructura</option>
+                        <option *ngFor="let tipoEstructura of tiposEstructuras" value="{{tipoEstructura.codigo}}">{{tipoEstructura.tipoEstructura}}</option>
+                      </select>
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.tipoEstructura.errors">
+                        <label class="error" *ngIf="fa.tipoEstructura.errors.required">Debe seleccionar un Tipo de Estructura</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="estructuras">Cantidad Sistemas de Antenas</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="estructuras" id="estructuras"
+                             placeholder="Ingrese la cantidad de antenas" inputInteger>
+                    </div>
+                    <ng-container *ngIf="submittedAgregarEstructura && fa.estructuras.errors">
+                      <label class="error" *ngIf="fa.estructuras.errors.required">Debe ingresar la cantidad de Sistemas de Antenas</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="metrosAdicionales">Metros adicionales</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="metrosAdicionales" class="form-control"
+                             formControlName="metrosAdicionales"
+                             placeholder="Ingrese los metros adicionales" (change)="recalcularValorAprobacion()"
+                      >
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.metrosAdicionales.errors">
+                        <label class="error" *ngIf="fa.metrosAdicionales.errors.required">Debe ingresar los metros adicionales</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="valorAprobacion">Valor aprobación</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="valorAprobacion" class="form-control"
+                             formControlName="valorAprobacion"
+                             readonly
+                      >
+                      <ng-container *ngIf="submittedAgregarEstructura && fa.valorAprobacion.errors">
+                        <label class="error" *ngIf="fa.valorAprobacion.errors.required">Debe ingresar el valor de aprobación</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-info waves-effect m-t-15" (click)="onCancelarAltaEstructura()" >Cancelar</button>
+              <app-loading-button [title]="'Grabar Estructura'" [loading]="loadingGrabarEstructura" [additionalClass]="'m-l-15'"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+

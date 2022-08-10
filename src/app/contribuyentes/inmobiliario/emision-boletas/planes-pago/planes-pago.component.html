@@ -1,0 +1,231 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>PLANES DE PAGO</strong> INMOBILIARIO / T.G.I</h2>
+          </div>
+          <div class="body">
+            <p>Por favor, ingrese catastro y plan</p>
+            <form id="form_inmobiliario" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="catastro">Catastro:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="catastro" class="form-control"
+                        formControlName="catastro"
+                        placeholder="Ingrese el Catastro del Inmueble"
+                        upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.catastro.errors && f.catastro.errors.required">Ingrese el catastro
+                          del inmueble</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.catastro.errors && f.catastro.errors.pattern">El formato del catastro
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="plan">Plan:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="plan" class="form-control"
+                             formControlName="plan"
+                             placeholder="Ingrese plan"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.plan.errors && f.plan.errors.required">Ingrese el plan</label>
+                        <label class="error" *ngIf="f.plan.errors && f.plan.errors.pattern">El formato del plan es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-xs-12">
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </div>
+              </div>
+            </form>
+            <div class="row clearfix" *ngIf="planesPago">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Estado de Deuda <strong>Inmobiliario</strong></h5>
+                  <h4><strong>Catastro:</strong> {{form.get('catastro').value}}</h4>
+                </div>
+                <div id="planesPagoCabecera" class="m-t-40">
+                  <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      Domicilio:
+                      <span>{{planesPago.domicilioImponible.domicilio}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Categoría:
+                      <span>{{planesPago.login.categoria}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Zona:
+                      <span>{{planesPago.login.zona}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Valor Terreno:
+                      <span>{{planesPago.login.valorTerreno}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Valor Edificado:
+                      <span>{{planesPago.login.valorEdificado}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Valor Fiscal:
+                      <span>{{planesPago.login.valorFiscal}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Nombre:
+                      <span>{{planesPago.fechaBaja ? '-' : planesPago.datosContribuyente.nombreCompleto || planesPago.datosContribuyente.razonSocial}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      CUIT:
+                      <span>{{planesPago.fechaBaja ? '-' : planesPago.datosContribuyente.cuit}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="planesPago">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="header bg-amber">
+                    <h2> Actualizar fecha de pago <small>Si desea establecer una fecha de pago posterior al vencimiento original de
+                      su/s boleta/s, ingrese aquí la nueva fecha y recalcule los importes.</small></h2>
+                  </div>
+                  <div class="body">
+                    <form id="form_recalculo" method="POST" [formGroup]="formRecalculo" (ngSubmit)="calcularDeuda()">
+                      <label for="fechaPago">Fecha de Pago</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <div class="form-line">
+                            <input type="text" class="datepicker form-control" formControlName="fechaPago"
+                                   id="fechaPago"
+                                   placeholder="Seleccione una fecha de pago..." readonly>
+                          </div>
+                        </div>
+                        <ng-container *ngIf="submittedRecalcular && fr.fechaPago.errors">
+                          <label class="error" *ngIf="fr.fechaPago.errors.required">Debe seleccionar una fecha</label>
+                        </ng-container>
+                      </div>
+                      <app-loading-button
+                        [title]="'Calcular'"
+                        [loading]="loadingRecalcular"
+                      ></app-loading-button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="planesPago">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Saldos pendientes</h5>
+                </div>
+                <div class="table-responsive m-t-40">
+                  <table class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th class="text-center">Boleta</th>
+                      <th class="text-center">Plan</th>
+                      <th class="text-center">Cuota</th>
+                      <th class="text-center">1er Vto.</th>
+                      <th class="text-center">Impuesto</th>
+                      <th class="text-center">Accesorios</th>
+                      <th class="text-center">Subtotal</th>
+                      <th class="text-center">Fecha Pago</th>
+                      <th class="text-center">Pagos</th>
+                      <th class="text-center">Otros Acc.</th>
+                      <th class="text-center">Saldo</th>
+                      <th class="text-center">Expediente</th>
+                    </tr>
+                    </thead>
+                    <tbody *blockUI="'visualizar-datos'">
+                    <ng-container *ngIf="planesPago.estadoPlanInmobiliario.length > 0; else noRegistros">
+                      <tr *ngFor="let cuota of planesPago.estadoPlanInmobiliario;let indice=index">
+                        <td class="text-center">
+                          <button
+                            class="btn bg-blue btn-circle waves-effect waves-circle waves-float"
+                            type="button"
+                            (click)="imprimirBoleta(cuota, indice)"
+                            *ngIf="cuota.saldo !== '0.00'"
+                          >
+                          <i [ngClass]="{
+                            'material-icons':!loadingImprimirBoleta[indice],
+                            'fas fa-spinner fa-spin':loadingImprimirBoleta[indice]
+                          }"><span *ngIf="!loadingImprimirBoleta[indice]">print</span></i>
+                          </button>
+                        </td>
+                        <td class="text-center">{{cuota.numeroAcogimiento}}</td>
+                        <td class="text-center">{{cuota.numeroCuota}}</td>
+                        <td class="text-center">{{cuota.fechaPrimerVencimiento}}</td>
+                        <td class="text-center">{{cuota.impuestoOrig}}</td>
+                        <td class="text-center">{{cuota.accesorios}}</td>
+                        <td class="text-center">{{cuota.subtotal}}</td>
+                        <td class="text-center">{{cuota.fechaPago}}</td>
+                        <td class="text-center">{{cuota.pagos}}</td>
+                        <td class="text-center">{{cuota.accesorios_2}}</td>
+                        <td class="text-center">{{cuota.saldo}}</td>
+                        <td class="text-center">{{cuota.expediente}}</td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noRegistros>
+                      <tr>
+                        <td colspan="12" class="text-center">No se encontraron registros</td>
+                      </tr>
+                    </ng-template>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="alert alert-info">
+                  {{planesPago.obsPlan.obsPlan}}
+                </div>
+                <div *ngIf="planesPago.obsPlan.obsPlan !== 'No existe el plan ' + form.get('plan').value + ' para el contribuyente'">
+                  <app-loading-button
+                    [title]="'Estado Deuda'"
+                    [loading]="loadingEstadoDeuda"
+                    [type]="'button'"
+                    (click)="imprimirEstadoDeuda()"
+                  ></app-loading-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

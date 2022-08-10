@@ -1,0 +1,65 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix" *ngIf="mostrarFinalizacion">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>PAGO CON TARJETA DE CREDITO</strong></h2>
+          </div>
+          <div class="body">
+            <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                 [innerHTML]="mensajeExitoso">
+              <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                      (click)="mensajeExitoso = false;">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="row clearfix">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                <app-loading-button class="pull-left"
+                                    [title]="'Nuevo Pago'"
+                                    [type]="'button'"
+                                    (clickButton)="nuevoPago()"
+                                    [buttonColor]="'info'"
+                ></app-loading-button>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                <app-loading-button class="pull-right"
+                                    [title]="'Finalizar'"
+                                    [type]="'button'"
+                                    (clickButton)="finalizar()"
+                ></app-loading-button>
+                <app-loading-button class="pull-right m-r-20"
+                                    [title]="'Emitir Comprobante'"
+                                    [type]="'button'"
+                                    (clickButton)="imprimirComprobante()"
+                                    [buttonColor]="'warning'"
+                                    [loading]="loadingImprimir"
+                ></app-loading-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="mostrarCtaCteUnificada">
+      <app-cta-cte-unificada-grilla
+        [soloDeuda]="true"
+        [medioPago]="medioPago"
+        [tituloPagina]="'PAGO CON TARJETA DE CRÉDITO'"
+        [buttonText]="'Pagar con Tarjeta'"
+        (clickButton)="generarDetallesVencimientos($event)"
+        [loadingButton]="loadingPagarTarjeta"
+        [refreshData]="!volverClicked"
+      ></app-cta-cte-unificada-grilla>
+    </ng-container>
+    <ng-container *ngIf="mostrarFormularioTarjeta">
+      <app-form-pago-tarjeta [personaId]="personaId"
+                             [totalOperacion]="totalPagar"
+                             (pagoExitoso)="onPagoExitoso($event)"
+                             (onCancelar)="volver()"
+      ></app-form-pago-tarjeta>
+    </ng-container>
+  </div>
+</section>

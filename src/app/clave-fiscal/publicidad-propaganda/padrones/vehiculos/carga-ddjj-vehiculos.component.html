@@ -1,0 +1,141 @@
+<section class="content">
+  <div class="container-fluid">
+
+    <div class="row clearfix" *ngIf="mensajePresentarDDJJ">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>IMPONIBLES INSCRIPTOS EN <strong> PUBLICIDAD Y PROPAGANDA</strong></h2>
+          </div>
+          <div class="body">
+            <p class="font-bold">Finalización de Trámite</p>
+            <p>Padrón: {{padron.col01}} - Objeto: {{padron.col02}}</p>
+
+            <div class="alert alert-info m-b-15 m-t-15">
+              {{mensajePresentarDDJJ}}
+            </div>
+
+            <button type="button" class="btn btn-info waves-effect m-t-15" (click)="volverPadrones()">Volver a Padrones</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row clearfix" *ngIf="mostrarFormVehiculos">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>Datos del Anuncio - <strong>Vehículos</strong></h2>
+            <button type="button" class="btn btn-info waves-effect m-t-15" (click)="volverPadrones()">Volver</button>
+          </div>
+          <div class="body">
+
+            <p class="font-bold">Padrón objeto / Razón social:</p>
+            <p>Padrón: {{padron.col01}} - Objeto: {{padron.col02}}</p>
+
+            <form id="form_consulta_ddjj" method="POST" [formGroup]="form" (ngSubmit)="presentarDDJJ()">
+              <div class="alert alert-danger" *ngIf="errorGeneral" [innerHTML]="errorGeneral"></div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="fechaInstalacion">Fecha a Liquidar</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="fechaInstalacion" class="form-control datepicker"
+                             formControlName="fechaInstalacion"
+                             placeholder="Ingrese una fecha"
+                             readonly
+                             #fechaInstalacion
+                      >
+                    </div>
+                    <ng-container *ngIf="submittedPresentar && f.fechaInstalacion.errors">
+                      <label class="error" *ngIf="f.fechaInstalacion.errors.required">Debe seleccionar una
+                        fecha</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="domicilioInstalacion">Domicilio Titular</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="domicilioInstalacion" class="form-control"
+                             formControlName="domicilioInstalacion"
+                             placeholder="Ingrese un domicilio"
+                      >
+                    </div>
+                    <ng-container *ngIf="submittedPresentar && f.domicilioInstalacion.errors">
+                      <label class="error" *ngIf="f.domicilioInstalacion.errors.required">Debe ingresar un
+                        domicilio</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="telefonoAnunciante">Teléfono del Anunciante o Titular</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="telefonoAnunciante"
+                             id="telefonoAnunciante"
+                             placeholder="Ingrese el teléfono...">
+                    </div>
+                    <ng-container *ngIf="submittedPresentar && f.telefonoAnunciante.errors">
+                      <label class="error" *ngIf="f.telefonoAnunciante.errors.required">Debe ingresar el
+                        teléfono</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Dominio</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="dominio"
+                             id="dominio"
+                             placeholder="Ingrese el teléfono...">
+                    </div>
+                    <ng-container *ngIf="submittedPresentar && f.dominio.errors">
+                      <label class="error" *ngIf="f.dominio.errors.required">Debe ingresar el
+                        dominio</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="vehiculos">Cantidad de Vehículos</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="number" id="vehiculos" class="form-control"
+                             formControlName="vehiculos"
+                             placeholder="Ingrese la cantidad de vehículos"
+                      >
+                    </div>
+                    <ng-container *ngIf="submittedPresentar && f.vehiculos.errors">
+                      <label class="error" *ngIf="f.vehiculos.errors.required">Debe ingresar la cantidad de vehiculos</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="text-right">
+                    <app-loading-button
+                      [title]="'Presentar'"
+                      [loading]="loadingPresentar"
+                    ></app-loading-button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,241 @@
+<section class="content">
+  <div class="container-fluid">
+    <!--Se agrega comentario pra Hector-->
+    <div class="row clearfix">
+      <div class="col-lg-8 col-md-12">
+        <div class="card" *ngIf="inicio">
+          <div class="header">
+            <h2><strong>Últimas</strong> Noticias</h2>
+          </div>
+          <div class="card-body">
+            <swiper [config]="config">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" *ngFor="let noticia of noticias">
+                  <div class="card profile-header">
+                    <div class="body">
+                      <div class="row">
+                        <ng-container *ngIf="noticia.imagenPortada && noticia.resumen">
+                          <div class="col-lg-6 col-md-6 col-12">
+                            <div class="profile-image float-md-right"><img
+                              [src]="staticServer + '/noticias/' + noticia.imagenPortada" alt="">
+                            </div>
+                          </div>
+                          <div class="col-lg-6 col-md-6 col-12 text-left">
+                            <h5 class="m-t-0 m-b-0">{{noticia.titulo}}</h5>
+                            <div class="job_post">{{noticia.fechaPublicacion | date: 'dd/MM/yyyy' }}</div>
+                            <p [innerHTML]="noticia.resumen | nl2br | truncateText : 30"></p>
+                            <p>
+                              <button class="btn bg-red waves-effect" type="button"
+                                      [routerLink]="['/noticias', noticia.slug]">Leer más
+                              </button>
+                            </p>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="noticia.imagenPortada && !noticia.resumen">
+                          <div class="col-lg-12 col-md-12 col-12">
+                            <div class="profile-image float-md-right"><img
+                              [src]="staticServer + '/noticias/' + noticia.imagenPortada" alt="">
+                            </div>
+                            <p>
+                              <button class="btn bg-red waves-effect" type="button"
+                                      [routerLink]="['/noticias', noticia.slug]">Leer más
+                              </button>
+                            </p>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngIf="!noticia.imagenPortada && noticia.resumen">
+                          <div class="col-lg-12 col-md-12 col-12 text-left">
+                            <h4 class="m-t-0 m-b-0">{{noticia.titulo}}</h4>
+                            <div class="job_post">{{noticia.fechaPublicacion | date: 'dd/MM/yyyy' }}</div>
+                            <p [innerHTML]="noticia.resumen | nl2br"></p>
+                            <p>
+                              <button class="btn bg-red waves-effect" type="button"
+                                      [routerLink]="['/noticias', noticia.slug]">Leer más
+                              </button>
+                            </p>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Add Pagination -->
+              <div class="swiper-pagination"></div>
+              <!-- Add Arrows -->
+              <div class="swiper-button-next-armsa"></div>
+              <div class="swiper-button-prev-armsa"></div>
+            </swiper>
+          </div>
+        </div>
+
+        <div class="card" *ngIf="descargas">
+          <app-descarga-sipret></app-descarga-sipret>
+
+        </div>
+
+        <div>
+
+
+          <div class="header" style="text-align: center;">
+            <h2>PAGÁ AQUÍ!!!</h2>
+          </div>
+
+
+        </div>
+
+        <div class="row clearfix">
+          <div class="offset-1 col-lg-2 col-md-2 col-sm-3 col-xs-6" title="Pagar">
+            <a routerlink="inmobiliario/emision-boletas/impuesto-inmobiliario"
+               href="#/inmobiliario/emision-boletas/impuesto-inmobiliario">
+              <div class="text-center" style="padding-top: 4px; padding-bottom: 0px">
+                <i class="fas fa-building fa-3x col-green"></i>
+                <div class="title p-t-1">
+
+                  <h6>Inmobiliario<br></h6>
+                </div>
+                <div class="text p-b-5">
+                </div>
+                <!--<a href="javascript:void(0);" (click)="descargaInmobiliario()">Guía de Trámites</a>-->
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" title="Pagar">
+            <a routerlink="inmobiliario/emision-boletas/tgi" href="#/inmobiliario/emision-boletas/tgi">
+              <div class="text-center" style="padding-top: 4px; padding-bottom: 0px">
+                <i class="fas fa-warehouse fa-3x col-green"></i>
+                <div class="title p-t-1">
+
+                  <h6>T.G.I.<br></h6>
+                </div>
+                <div class="text p-b-10">
+                </div>
+                <!--<a href="javascript:void(0);" (click)="descargaInmobiliario()">Guía de Trámites</a>-->
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" title="Pagar">
+            <a routerlink="automotores/emision-boletas/impuesto-automotor"
+               href="#/automotores/emision-boletas/impuesto-automotor">
+              <div class="text-center" style="padding-top: 4px; padding-bottom: 0px">
+                <i class="fas fa-car fa-3x col-red"></i>
+                <div class="title p-t-1">
+
+                  <h6>Automotor<br></h6>
+
+                </div>
+                <div class="text p-b-10">
+                </div>
+                <!-- <a href="javascript:void(0);" (click)="descargaAutomotor()">Guía de Trámites</a>-->
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" title="Pagar">
+            <a routerlink="automotores/emision-boletas/tasa-ambiental"
+               href="#/automotores/emision-boletas/tasa-ambiental">
+              <div class="text-center" style="padding-top: 4px; padding-bottom: 0px">
+                <i class="fas fa-car-side fa-3x col-red"></i>
+                <div class="title p-t-1">
+
+                  <h6 style="padding-bottom: 0px">Tasa Ambiental</h6>
+
+                </div>
+                <div class="text p-b-10">
+                </div>
+                <!-- <a href="javascript:void(0);" (click)="descargaAutomotor()">Guía de Trámites</a>-->
+              </div>
+            </a>
+          </div>
+
+          <div class="col-lg-2 col-md-2 col-sm-3 col-xs-6" title="Pagar">
+            <a routerlink="automotores/emision-boletas/multas-transito"
+               href="#/automotores/emision-boletas/multas-transito">
+              <div class="text-center" style="padding-top: 4px; padding-bottom: 0px">
+                <i class="fas fa-clipboard fa-3x col-red"></i>
+                <div class="title p-t-1">
+
+                  <h6>Multas de Tránsito</h6>
+
+                </div>
+                <div class="text p-b-10">
+                </div>
+                <!-- <a href="javascript:void(0);" (click)="descargaAutomotor()">Guía de Trámites</a>-->
+              </div>
+            </a>
+          </div>
+
+        </div>
+
+
+        <!-- <div class="box-part transparent text-center">
+           <img src="assets/images/armsa/banner-moratoria.jpg" alt="ARMSA - Moratoria"/>
+         </div> -->
+      </div>
+      <div class="col-lg-4 col-md-12">
+        <div class="card">
+          <div class="header">
+            <h2>Novedades</h2>
+          </div>
+          <div class="body">
+            <div class="list-group">
+
+              <button type="button" class="list-group-item" onclick="window.location.href='#/contribuyentes/descargas'">
+                Descargas
+                <a routerlink="contribuyentes/descargas" href="#/contribuyentes/descargas">
+                </a>
+              </button>
+              <button type="button" class="list-group-item">Oficinas</button>
+              <button type="button" class="list-group-item">Teléfonos</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="header">
+            <h2><strong>Próximos</strong> vencimientos</h2>
+          </div>
+          <div class="body">
+            <div class="card-block">
+              <full-calendar *ngIf="calendarEvents"
+                             defaultView="dayGridMonth"
+                             [plugins]="calendarPlugins"
+                             [weekends]="false"
+                             [events]="calendarEvents"
+                             [locale]="'es'"
+                             [buttonText]="calendarButtonText"
+                             (eventRender)="eventRender($event)"
+              ></full-calendar>
+              <div class="modal fade" #modalCalendarEvent id="modalCalendarEvent" tabindex="-1" role="dialog"
+                   aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+                      <button type="button" class="close" data-dismiss="modal"
+                              aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      ...
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-info waves-effect">Save</button>
+                      <button type="button" class="btn btn-danger waves-effect"
+                              data-dismiss="modal">Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</section>

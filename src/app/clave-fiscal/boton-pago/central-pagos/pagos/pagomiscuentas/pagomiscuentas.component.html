@@ -1,0 +1,117 @@
+<div class="row clearfix" *ngIf="mostrarFormulario">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Pagomiscuentas</strong></h2>
+      </div>
+      <div class="body">
+        <div class="row">
+          <div class="col-md-12 col-lg-12">
+            <div class="table-responsive m-t-40">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th class="text-center">N°</th>
+                    <th class="text-center">Período</th>
+                    <th class="text-center">Importe Adeudado</th>
+                    <th class="text-center">Importe a Pagar</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container *ngIf="detalles.length > 0">
+                    <tr *ngFor="let detalle of detalles; let idx = index">
+                      <td class="text-center">{{ idx + 1 }}</td>
+                      <td class="text-center">
+                        {{ detalle.numCuota + "/" + detalle.anio }}
+                      </td>
+                      <td class="text-center">
+                        {{ detalle.deudaActual.toFixed(2) }}
+                      </td>
+                      <td class="text-center">
+                        {{ detalle.importeActualizado.toFixed(2) }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th colspan="2">TOTALES</th>
+                      <th class="text-center">
+                        {{ totalDeudaActual.toFixed(2) }}
+                      </th>
+                      <th class="text-center">
+                        {{ totalImporteActualizado.toFixed(2) }}
+                      </th>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <form method="POST" [formGroup]="form" (ngSubmit)="generarVolantePago()">
+          <label for="titular">Titular</label>
+          <div class="form-group">
+            <div class="form-line">
+              <input type="text" id="titular" class="form-control" formControlName="titular"
+                placeholder="Ingrese el nombre del titular" upperCase />
+              <ng-container *ngIf="submitted && f.titular.errors">
+                <label class="error" *ngIf="f.titular.errors.required">Ingrese el titular</label>
+              </ng-container>
+            </div>
+          </div>
+          <label for="banco">Banco</label>
+          <div class="form-group">
+            <div class="form-line input-field">
+              <select id="banco" class="form-control" formControlName="banco">
+                <option value="" [selected]="true" disabled>
+                  Seleccione un Banco
+                </option>
+                <option *ngFor="let banco of bancos" value="{{ banco.bank_id + '|' + banco.name }}">
+                  {{ banco.name }}
+                </option>
+              </select>
+            </div>
+            <ng-container *ngIf="submitted && f.banco.errors">
+              <label class="error" *ngIf="f.banco.errors.required">Debe seleccionar un Banco</label>
+            </ng-container>
+          </div>
+          <app-loading-button [title]="'Generar VEP PagoMisCuentas'" [loading]="loading" [type]="'button'"
+            (click)="generarVolantePago()"></app-loading-button>
+          <div class="alert alert-danger" *ngIf="errorGeneral">
+            {{errorGeneral}}
+            <br><br>
+            <app-loading-button class="pull-right" [title]="'Finalizar'" [type]="'button'" (clickButton)="finalizar()">
+            </app-loading-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row clearfix" *ngIf="mostrarFinalizacionPagomiscuentas">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2>
+          <strong>PAGOMISCUENTAS</strong>
+        </h2>
+      </div>
+      <div class="body">
+        <div role="alert" class="alert alert-success alert-dismissible">
+          <p>
+            La solicitud fue enviada a PAGOMISCUENTAS. Puede encontrarla su Home
+            Banking, Pagomiscuentas.com o en la Red de cajeros Banelco.
+          </p>
+        </div>
+        <div class="row clearfix">
+          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+            <app-loading-button class="pull-right" [title]="'Finalizar'" [type]="'button'" (clickButton)="finalizar()">
+            </app-loading-button>
+            <app-loading-button class="pull-right m-r-20" [title]="'Emitir Comprobante'" [type]="'button'"
+              (clickButton)="imprimirConstanciaBanelco()" [buttonColor]="'warning'" [loading]="loadingImprimir">
+            </app-loading-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

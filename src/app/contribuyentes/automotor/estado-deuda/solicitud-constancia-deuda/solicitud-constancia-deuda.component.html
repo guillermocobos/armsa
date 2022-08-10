@@ -1,0 +1,202 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>SOLICITUD DE CONSTANCIA DE </strong> DEUDA REGULARIZADA</h2>
+          </div>
+          <div class="body">
+            <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Dominio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dominio" class="form-control"
+                             formControlName="dominio"
+                             placeholder="Ingrese el dominio"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.required">Ingrese el dominio
+                          del vehículo</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.pattern">El formato del dominio
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                    <div class="help-info">Formato SIN guiones y SIN espacios (ej: ABC123 o AB123CD)</div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="clave">Clave:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="clave" class="form-control"
+                             formControlName="clave"
+                             placeholder="Ingrese la clave"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.required">Ingrese la clave</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="solicitante">Solicitante:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="solicitante" class="form-control"
+                             formControlName="solicitante"
+                             placeholder="Ingrese el nombre del solicitante"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.solicitante.errors && f.solicitante.errors.required">Ingrese el nombre del solicitante</label>
+                        <label class="error" *ngIf="f.solicitante.errors && f.solicitante.errors.pattern">El formato del dominio
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dni">DNI:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dni" class="form-control"
+                             formControlName="dni"
+                             placeholder="Ingrese DNI"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.dni.errors && f.dni.errors.required">Ingrese el DNI</label>
+                        <label class="error" *ngIf="f.dni.errors && f.dni.errors.pattern">El formato del DNI es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="domicilio">Domicilio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="domicilio" class="form-control"
+                             formControlName="domicilio"
+                             placeholder="Ingrese el domicilio del solicitante"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.domicilio.errors && f.domicilio.errors.required">Ingrese el domicilio del solicitante</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="telefono">Teléfono:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="telefono" class="form-control"
+                             formControlName="telefono"
+                             placeholder="Ingrese el teléfono"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.telefono.errors && f.telefono.errors.required">Ingrese el teléfono</label>
+                        <label class="error" *ngIf="f.telefono.errors && f.telefono.errors.pattern">El formato del teléfono es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <label for="email">Email:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="email" class="form-control"
+                             formControlName="email"
+                             placeholder="Ingrese el email del solicitante"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.email.errors && f.email.errors.required">Ingrese el email del solicitante</label>
+                        <label class="error" *ngIf="f.email.errors && f.email.errors.pattern">El formato del email es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                  <app-loading-button [title]="'Solicitar'" [loading]="loading"></app-loading-button>
+                </div>
+
+              </div>
+              <div class="alert alert-info">
+                Guía del usuario: El PIN viene incorporado en las boletas que se reparten a domicilio
+              </div>
+            </form>
+            <div class="row clearfix" *ngIf="planesPago">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Solicitud de Constancia de Deuda Regularizada</h5>
+                  <h4><strong>Dominio:</strong> {{datosDeConsulta.dominio}}</h4>
+                </div>
+                <ng-container *ngIf="planesPago.libreDeuda.substring(0, 1) !== '-' && planesPago.libreDeuda !== '0' && planesPago.libreDeuda !== 'N'; else libreDeuda0">
+                  <ng-container *ngIf="planesPago.libreDeuda !== 'P'; else libreDeudaP">
+                    <ng-container *ngIf="+planesPago.valorDeuda === 0">
+                      <div class="alert alert-danger">
+                        No se puede imprimir la constancia para el dominio {{datosDeConsulta.dominio}} ya que tiene registrada una deuda
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="+planesPago.valorDeuda !== 0">
+                      <div class="alert alert-danger">
+                        No se puede imprimir la constancia para el dominio {{datosDeConsulta.dominio}} ya que tiene registrada una deuda de ${{planesPago.valorDeuda}}.
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                  <ng-template #libreDeudaP>
+                    <div class="alert alert-danger">
+                      No se puede imprimir la constancia para el dominio {{datosDeConsulta.dominio}} ya que adeuda cuotas de Planes de Facilidades.
+                    </div>
+                  </ng-template>
+                </ng-container>
+                <ng-template #libreDeuda0>
+                  <ng-container *ngIf="planesPago.valorDeuda !== '0'; else libreDeudaOk">
+                    <div class="alert alert-danger">
+                      No se puede imprimir la constancia para el dominio {{datosDeConsulta.dominio}}. Por favor comuníquese con el área.
+                    </div>
+                  </ng-container>
+                  <ng-template #libreDeudaOk>
+                    <div>
+                      Se ha emitido su Constancia de Deuda Regularizada.<br/>
+                      <app-loading-button
+                      (click)="imprimirConstancia()"
+                        [title]="'Descargar'"
+                        [loading]="loadingImprimir"
+                        [type]="'button'"
+                      ></app-loading-button>
+                    </div>
+                  </ng-template>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

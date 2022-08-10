@@ -1,0 +1,65 @@
+export class EstadoDeudaPlanCabeceraModel {
+  numeroAcogimiento: string;
+  expedienteNumero: string;
+  expedienteCodigo: string;
+  expedienteAnio: string;
+  caratula: string;
+  impuestoDescr: string;
+  conceptoObligacionDescr: string;
+  titulo: string;
+  tipoPlanDescr: string;
+  tipoDocumento: string;
+  numeroDocumento: string;
+  cuit: string;
+  razonSocial: string;
+  fechaGeneracion: string;
+  fechaActualizadaDeuda: string;
+  deudaActualizada: string;
+  cuotasGeneradas: string;
+  valorAnticipo: string;
+  observaciones: string;
+  fechaReversion: string;
+  usuarioReversion: string;
+  notificaciones: string;
+  estadoFirma: string;
+  planFacilidad: string;
+  moneda: string;
+  monedaAbrev: string;
+  tipoMoratoria: string;
+  destinoPlan: string;
+  departamentoOrigen: string;
+  estadoDelPlan: string;
+
+  constructor(obj?: any) {
+    this.numeroAcogimiento = obj.NUMERO_ACOGIMIENTO || '---';
+    this.expedienteNumero = obj.EXPEDIENTE_NUMERO || '---';
+    this.expedienteCodigo = obj.EXPEDIENTE_CODIGO || '---';
+    this.expedienteAnio = obj.EXPEDIENTE_ANIO || '---';
+    this.caratula = obj.CARATULA || '---';
+    this.impuestoDescr = obj.IMPUESTO_DESCR || '---';
+    this.conceptoObligacionDescr = obj.CONCEPTO_OBLIGACION_DESCR || '---';
+    this.titulo = obj.TITULO || '---';
+    this.tipoPlanDescr = obj.TIPO_PLAN_DESCR || '---';
+    this.tipoDocumento = obj.TIPO_DOCUMENTO || '---';
+    this.numeroDocumento = obj.NUMERO_DOCUMENTO || '---';
+    this.cuit = obj.CUIT || '---';
+    this.razonSocial = obj.RAZON_SOCIAL || '---';
+    this.fechaGeneracion = obj.FECHA_GENERACION || '---';
+    this.fechaActualizadaDeuda = obj.FECHA_ACTUALIZADA_DEUDA || '---';
+    this.deudaActualizada = obj.DEUDA_ACTUALIZADA || '---';
+    this.cuotasGeneradas = obj.CUOTAS_GENERADAS || '---';
+    this.valorAnticipo = obj.VALOR_ANTICIPO || '---';
+    this.observaciones = obj.OBSERVACIONES || '---';
+    this.fechaReversion = obj.FECHA_REVERSION || '---';
+    this.usuarioReversion = obj.USUARIO_REVERSION || '---';
+    this.notificaciones = obj.NOTIFICACIONES || '---';
+    this.estadoFirma = obj.ESTADO_FIRMA || '---';
+    this.planFacilidad = obj.PLAN_FACILIDAD || '---';
+    this.moneda = obj.MONEDA || '---';
+    this.monedaAbrev = obj.MONEDA_ABREV || '---';
+    this.tipoMoratoria = obj.TIPO_MORATORIA || '---';
+    this.destinoPlan = obj.DESTINO_PLAN || '---';
+    this.departamentoOrigen = obj.DEPARTAMENTO_ORIGEN || '---';
+    this.estadoDelPlan = obj.ESTADO_DEL_PLAN || '---';
+  }
+}

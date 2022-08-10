@@ -1,0 +1,273 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix" *ngIf="mostrarListadoDeuda">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>AUTOMOTOR</strong> IMPUESTO AUTOMOTOR</h2>
+          </div>
+          <div class="body">
+            <div class="row clearfix">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+                  <label for="dominio">Dominio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dominio" class="form-control"
+                             formControlName="dominio"
+                             placeholder="Ingrese un Dominio"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.required">Ingrese el dominio del vehículo</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.pattern">El formato del dominio es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                    <div class="help-info">Formato sin guión medio ni espacios</div>
+                  </div>
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </form>
+              </div>
+            </div>
+
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="pull-center"> Ahora puede pagar con:
+                  <div class="pull-center">
+                    <img src="assets/images/visa.png" style="width: 50px"/>
+                    <img src="assets/images/mastercard.png" style="width: 50px"/>
+                    <img src="assets/images/cabal_credito.png" style="width: 50px"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row clearfix" *ngIf="estadoDeuda">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Estado de Deuda <strong>Automotor</strong></h5>
+                  <h4><strong>Dominio:</strong> {{form.get('dominio').value}}</h4>
+                </div>
+                <div id="estadoDeudaCabecera" class="m-t-40">
+                  <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      Domicilio:
+                      <span>{{estadoDeuda.domicilioImponible.domicilio}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Marca:
+                      <span>{{estadoDeuda.login.marca}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Modelo:
+                      <span>{{estadoDeuda.login.modelo}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Año:
+                      <span>{{estadoDeuda.login.anioDom}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Grupo:
+                      <span>{{estadoDeuda.login.grupo}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Categoría:
+                      <span>{{estadoDeuda.login.categoria}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Nombre:
+                      <span>{{estadoDeuda.fechaBaja ? '-' : estadoDeuda.datosContribuyente.nombreCompleto}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      CUIT:
+                      <span>{{estadoDeuda.fechaBaja ? '-' : estadoDeuda.datosContribuyente.cuit}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="estadoDeuda">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="header bg-amber">
+                    <h2> Actualizar fecha de pago <small>Si desea establecer una fecha de pago posterior al vencimiento original de
+                      su/s boleta/s, ingrese aquí la nueva fecha y recalcule los importes.</small></h2>
+                  </div>
+                  <div class="body">
+                    <form id="form_recalculo" method="POST" [formGroup]="formRecalculo" (ngSubmit)="calcularDeuda()">
+                      <label for="fechaPago">Fecha de Pago</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <div class="form-line">
+                            <input type="text" class="datepicker form-control" formControlName="fechaPago"
+                                   id="fechaPago"
+                                   placeholder="Seleccione una fecha de pago..." readonly>
+                          </div>
+                        </div>
+                        <ng-container *ngIf="submittedRecalcular && fr.fechaPago.errors">
+                          <label class="error" *ngIf="fr.fechaPago.errors.required">Debe seleccionar una fecha</label>
+                        </ng-container>
+                      </div>
+                      <app-loading-button
+                        [title]="'Calcular'"
+                        [loading]="loadingRecalcular"
+                      ></app-loading-button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="estadoDeuda">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Saldos pendientes</h5>
+                </div>
+                <div class="table-responsive m-t-40">
+                  <table class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th class="text-center">Boleta</th>
+                      <th class="text-center">Año</th>
+                      <th class="text-center">Cuota</th>
+                      <th class="text-center">1er Vto.</th>
+                      <th class="text-center">Impuesto</th>
+                      <th class="text-center">Exceso</th>
+                      <th class="text-center">Pago</th>
+                      <th class="text-center">Canc.</th>
+                      <th class="text-center">Otros</th>
+                      <th class="text-center">Accesorios</th>
+                      <th class="text-center">Subtotal</th>
+                      <th class="text-center">Fecha Pago</th>
+                      <th class="text-center">Pagos</th>
+                      <th class="text-center">Otros Acc.</th>
+                      <th class="text-center">Saldo</th>
+                      <th class="text-center">Observaciones</th>
+                    </tr>
+                    </thead>
+                    <tbody *blockUI="'visualizar-datos'">
+                      <ng-container *ngIf="estadoDeuda.deudaAutos.length > 0; else noRegistros">
+                        <tr *ngFor="let cuota of estadoDeuda.deudaAutos;let indice=index">
+                          <td class="text-center">
+                            <button
+                              class="btn btn-info waves-effect"
+                              type="button"
+                              (click)="imprimirBoleta(cuota, indice)"
+                            >
+                              Imprimir
+                         <!--   <i [ngClass]="{
+                              'material-icons':!loadingImprimirBoleta[indice],
+                              'fas fa-spinner fa-spin':loadingImprimirBoleta[indice]
+                            }"><span *ngIf="!loadingImprimirBoleta[indice]">print</span></i> -->
+                            </button>
+                            <button
+
+                              type="button"
+                              class="btn btn-info waves-effect"
+                              (click)="generarDetallesVencimientos(cuota)"
+                            >
+                              Pagar
+
+                            </button>
+                          </td>
+                          <td class="text-center">{{cuota.anio}}</td>
+                          <td class="text-center">{{cuota.numeroCuota}}</td>
+                          <td class="text-center">{{cuota.fechaPrimerVencimiento}}</td>
+                          <td class="text-center">{{cuota.impuesto}}</td>
+                          <td class="text-center">{{cuota.compExceso}}</td>
+                          <td class="text-center">{{cuota.pag}}</td>
+                          <td class="text-center">{{cuota.canc}}</td>
+                          <td class="text-center">{{cuota.otros}}</td>
+                          <td class="text-center">{{cuota.accesorios}}</td>
+                          <td class="text-center">{{cuota.subtotal}}</td>
+                          <td class="text-center">{{cuota.fechaPago}}</td>
+                          <td class="text-center">{{cuota.pagos}}</td>
+                          <td class="text-center">{{cuota.accesorios_2}}</td>
+                          <td class="text-center">{{cuota.saldo}}</td>
+                          <td class="text-center">{{cuota.observaciones}}</td>
+                        </tr>
+                      </ng-container>
+                      <ng-template #noRegistros>
+                        <tr>
+                          <td colspan="12" class="text-center">No se encontraron registros</td>
+                        </tr>
+                      </ng-template>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="mostrarFormularioTarjeta">
+      <app-form-pago-tarjeta [personaId]="personaId"
+                             [totalOperacion]="importeTotal"
+                             (pagoExitoso)="onPagoExitoso($event)"
+                             (onCancelar)="finalizar()"
+      ></app-form-pago-tarjeta>
+    </ng-container>
+
+    <div class="row clearfix" *ngIf="mostrarFinalizacion">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>PAGO CON TARJETA DE CREDITO</strong></h2>
+          </div>
+          <div class="body">
+            <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                 [innerHTML]="mensajeExitoso">
+              <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                      (click)="mensajeExitoso = false;">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="row clearfix">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                <app-loading-button class="pull-left"
+                                    [title]="'Regresar'"
+                                    [type]="'button'"
+                                    (clickButton)="finalizar()"
+                                    [buttonColor]="'info'"
+                ></app-loading-button>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                <app-loading-button class="pull-right m-r-20"
+                                    [title]="'Emitir Comprobante'"
+                                    [type]="'button'"
+                                    (clickButton)="imprimirComprobante()"
+                                    [buttonColor]="'warning'"
+                                    [loading]="loadingImprimir"
+                ></app-loading-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

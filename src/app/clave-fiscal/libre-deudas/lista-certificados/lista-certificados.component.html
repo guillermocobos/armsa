@@ -1,0 +1,74 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>LISTA DE <strong>CERTIFICADOS</strong></h2>
+            <button type="button" class="btn btn-info m-t-15 waves-effect pull-right" routerLink="/clave-fiscal/libre-deudas">Volver</button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+            <div class="table-responsive">
+              <table class="table table-hover" datatable id="tabla-certificados"
+                     [dtOptions]="dtOptions"
+                     [dtTrigger]="dtTrigger"
+                     #tablainstalacion
+              >
+                <thead>
+                <tr>
+                  <th class="center">Fecha Solicitud</th>
+                  <th class="center">Identificación</th>
+                  <th class="center">Tipo Certificado</th>
+                  <th class="center">Nro. Certificado</th>
+                  <th class="center">Fecha Cálculo</th>
+                  <th class="center">Estado</th>
+                  <th class="center">Imprimir</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let certificado of certificados; let idx = index;">
+                  <td class="center">
+                    <span>{{certificado.fechaSolic | date: 'yyyyMMdd'}}</span>{{certificado.fechaSolic | date: 'dd/MM/yyyy'}}
+                  </td>
+                  <td class="center">
+                    {{certificado.identificacionLarga}}
+                  </td>
+                  <td class="center">
+                    {{certificado.tipoCertificado}}
+                  </td>
+                  <td class="center">
+                    {{certificado.numeroCertificado}}
+                  </td>
+                  <td class="center">
+                    <span>{{certificado.fechaCalculoDeuda | date: 'yyyyMMdd'}}</span>{{certificado.fechaCalculoDeuda | date: 'dd/MM/yyyy'}}
+                  </td>
+                  <td class="center">
+                    {{certificado.estado}}
+                  </td>
+                  <td class="center">
+                    <app-loading-button
+                      [title]="'Imprimir Certificado'"
+                      [loading]="loadingImprimir && certificadoImprimir && certificadoImprimir.estructuraId === certificado.estructuraId && indexImprimir === idx"
+                      [type]="'button'"
+                      (click)="imprimir(certificado, idx)"
+                      [additionalClass]="'btn-sm'"
+                      [marginTop]="''"
+                      [replaceLoading]="true"
+                    ></app-loading-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+

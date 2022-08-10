@@ -1,0 +1,74 @@
+export class EstadoDeudaImponibleModel {
+
+  libreDeudaId: string;
+  libreDeuda: string;
+  tipoImponible: string;
+  claveImponible: string;
+  identificacionLarga: string;
+  impuTasa: string;
+  anio: string;
+  impuesto: string;
+  numeroObligacion: string;
+  conceptoObligacion: string;
+  numeroCuota: string;
+  numeroCuota1: string;
+  estadoCuota: string;
+  importeAPagar: string;
+  importePagado: string;
+  importeActualizado: string;
+  fechaVencimiento: string;
+  observaciones: string;
+  indicativoMigracion: string;
+  juicioId: string;
+  numeroIntimacion: string;
+  moneda: string;
+  monedaAbrev: string;
+  fechaBaja: string;
+  motivoBaja: string;
+  numeroObligacionImpuesto: string;
+  numeroRectificativa: string;
+  fechaPresentacion: string;
+  planFacilidad: string;
+  vencimientoNoPagado: string;
+  fechaPago: string;
+  tipoImponibleAbrev: string;
+  impuestoAbrev: string;
+  conceptoObligacionAbrev: string;
+
+  constructor(obj?: any) {
+    this.libreDeudaId = obj.LIBRE_DEUDA_ID || '';
+    this.libreDeuda = obj.LIBRE_DEUDA || '';
+    this.tipoImponible = obj.TIPO_IMPONIBLE || '';
+    this.claveImponible = obj.CLAVE_IMPONIBLE || '';
+    this.identificacionLarga = obj.IDENTIFICACION_LARGA || '';
+    this.impuTasa = obj.IMPU_TASA || '';
+    this.anio = obj.ANIO || '';
+    this.impuesto = obj.IMPUESTO || '';
+    this.numeroObligacion = obj.NUMERO_OBLIGACION || '';
+    this.conceptoObligacion = obj.CONCEPTO_OBLIGACION || '';
+    this.numeroCuota = obj.NUMERO_CUOTA || '';
+    this.numeroCuota1 = obj.NUMERO_CUOTA1 || '';
+    this.estadoCuota = obj.ESTADO_CUOTA || '';
+    this.importeAPagar = obj.IMPORTE_A_PAGAR || '';
+    this.importePagado = obj.IMPORTE_PAGADO || '';
+    this.importeActualizado = obj.IMPORTE_ACTUALIZADO || '';
+    this.fechaVencimiento = obj.FECHA_VENCIMIENTO || '';
+    this.observaciones = obj.OBSERVACIONES || '';
+    this.indicativoMigracion = obj.INDICATIVO_MIGRACION || '';
+    this.juicioId = obj.JUICIO_ID || '';
+    this.numeroIntimacion = obj.NUMERO_INTIMACION || '';
+    this.moneda = obj.MONEDA || '';
+    this.monedaAbrev = obj.MONEDA_ABREV || '';
+    this.fechaBaja = obj.FECHA_BAJA || '';
+    this.motivoBaja = obj.MOTIVO_BAJA || '';
+    this.numeroObligacionImpuesto = obj.NUMERO_OBLIGACION_IMPUESTO || '';
+    this.numeroRectificativa = obj.NUMERO_RECTIFICATIVA || '';
+    this.fechaPresentacion = obj.FECHA_PRESENTACION || '';
+    this.planFacilidad = obj.PLAN_FACILIDAD || '';
+    this.vencimientoNoPagado = obj.VENCIMIENTO_NO_PAGADO || '';
+    this.fechaPago = obj.FECHA_PAGO || '';
+    this.tipoImponibleAbrev = obj.TIPO_IMPONIBLE_ABREV || '';
+    this.impuestoAbrev = obj.IMPUESTO_ABREV || '';
+    this.conceptoObligacionAbrev = obj.CONCEPTO_OBLIGACION_ABREV || '';
+  }
+}

@@ -1,0 +1,210 @@
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2><strong>{{tituloPagina}}</strong></h2>
+            </div>
+            <div class="body" *blockUI="'visualizar-datos'">
+                <div class="row clearfix" *ngIf="obligacionesObj && !loading">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header bg-amber">
+                                <h2> Seleccione la fecha de pago</h2>
+                            </div>
+                            <div class="body">
+                                <form id="form_recalculo" method="POST" [formGroup]="form" (ngSubmit)="consultarObligaciones()">
+                                    <label for="fechaPago">Fecha de Pago</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="form-line">
+                                                <input type="text" class="datepicker form-control" formControlName="fechaPago" id="fechaPago" placeholder="Seleccione una fecha de pago..." readonly>
+                                            </div>
+                                        </div>
+                                        <ng-container *ngIf="submitted && f.fechaPago.errors">
+                                            <label class="error" *ngIf="f.fechaPago.errors.required">Debe seleccionar una fecha</label>
+                                        </ng-container>
+                                    </div>
+                                    <app-loading-button [title]="'Calcular'" [loading]="loading" (click)="consultarObligaciones()"></app-loading-button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" *ngIf="obligacionesObj && !loading">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="header bg-amber">
+                                <h2> Cuenta Corriente Unificada</h2>
+                            </div>
+                            <div class="body">
+                                <div class="alert alert-danger" *ngIf="errorGeneral">
+                                    {{errorGeneral}}
+                                </div>
+                                <h4>
+                                    <span class="label label-info p-10">Total a Pagar: ${{totalPagar | number:'1.2-2'}}</span>
+                                    <p-checkbox [(ngModel)]="seleccionarDeudaTotal" [binary]="true" (onChange)="onSelectUnselectAllGeneral($event)" [label]="(seleccionarDeudaTotal ? 'Desmarcar' : 'Marcar') + ' todas las deudas impagas'" class="m-l-10">
+                                    </p-checkbox>
+                                    <app-loading-button class="pull-right" [title]="buttonText" [loading]="loadingButton" [type]="'button'" (clickButton)="onClickButton()" [buttonColor]="'danger'" [disabled]="+totalPagar <= 0"></app-loading-button>
+                                </h4>
+                            </div>
+                            <div class="body" *ngIf="obligacionesObj && !loading">
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <ul class="nav nav-tabs nav-fill" role="tablist" style="font-size: 16px;">
+                                            <li class="nav-item" role="presentation" *ngFor="let tab of tabs; let idx = index;">
+                                                <a href="#tab_{{idx}}" [ngClass]="{'active show': activeTab === tab}" (click)="changeTab(tab)" data-toggle="tab" class="">
+                                                    <i class="material-icons">receipt</i> {{tab}} (${{totalImponible[tab] | number:'1.2-2'}})
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane fade in" *ngFor="let tab of tabs; let idx = index;" [ngClass]="{'active show': activeTab === tab}" id="tab_{{idx}}">
+
+                                                <p-table #dt *ngIf="obligacionesObj && !loading" [value]="obligacionesObj[tab]" dataKey="id" styleClass="ui-table-customers" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
+                                                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} registros" [filterDelay]="0" [globalFilterFields]="['identificacion','total','datosImponibleObj']" [pageLinks]="3" [paginatorPosition]="'top'"
+                                                    [alwaysShowPaginator]="false" [hip]>
+                                                    <ng-template pTemplate="caption">
+                                                        <span class="label bg-blue-grey">Total {{tab}}: ${{totalImponible[tab] | number:'1.2-2'}}</span>
+                                                        <div class="ui-table-globalfilter-container">
+                                                            <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Búsqueda general" />
+                                                        </div>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="header">
+                                                        <tr>
+                                                            <th style="width: 5%"></th>
+                                                            <th style="width: 15%" pSortableColumn="identificacion">Identificación
+                                                                <p-sortIcon field="identificacion"></p-sortIcon>
+                                                            </th>
+                                                            <th style="width: 55%">Datos del Imponible</th>
+                                                            <th style="width: 20%" pSortableColumn="total">Total Deuda Imponible
+                                                                <p-sortIcon field="total"></p-sortIcon>
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-obligacion>
+                                                        <tr [pRowToggler]="rowData">
+                                                            <td>
+                                                                <a href="javascript: void(0);">
+                                                                    <i [ngClass]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <span class="font-weight-bold">{{obligacion.identificacion}}</span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="row">
+                                                                    <div class="col-md-5"><span class="font-weight-bold">{{obligacion.datosImponibleObj[0][0] }}:</span> {{obligacion.datosImponibleObj[0][1]}}</div>
+                                                                    <div class="col-md-7"><span class="font-weight-bold">{{obligacion.datosImponibleObj[1][0] }}:</span> {{obligacion.datosImponibleObj[1][1]}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <ng-container *ngFor="let det of obligacion.datosImponibleObj; let idx = index;">
+                                                                        <div class="col-lg" *ngIf="idx > 1"><span class="font-weight-bold">{{det[0] }}:</span> {{det[1]}}</div>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </td>
+                                                            <td><span class="font-16 font-weight-bold">${{obligacion.total | number:'1.2-2'}}</span></td>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="emptymessage">
+                                                        <tr>
+                                                            <td colspan="4" style="text-align:center">No se encontraron registros.</td>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="rowexpansion" let-rowData let-obligacion>
+                                                        <tr>
+                                                            <td [attr.colspan]="4">
+                                                                <p-table [value]="obligacion.detalles" selectionMode="multiple" [(selection)]="deudasSelected[obligacion.id.toString()]" dataKey="deudaId" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
+                                                                    [paginator]="true" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} registros" [filterDelay]="0" [globalFilterFields]="['impuestoDesc','conceptoDesc','numCuota', 'anio']"
+                                                                    [pageLinks]="3" [paginatorPosition]="'top'" [alwaysShowPaginator]="false" styleClass="ui-table-customers" (onRowSelect)="onRowSelect($event, obligacion.id)" (onRowUnselect)="onRowUnselect($event, obligacion.id)"
+                                                                    (onHeaderCheckboxToggle)="onSelectUnselectAll($event, obligacion.id)">
+                                                                    >
+                                                                    <ng-template pTemplate="header">
+                                                                        <tr class="detail-table-row">
+                                                                            <th style="width: 16%">Impuesto</th>
+                                                                            <th style="width: 13%">Concepto</th>
+                                                                            <th style="width: 12%">Periodo / Cuota</th>
+                                                                            <th style="width: 12%">Vto.</th>
+                                                                            <th style="width: 10%">Deuda<br>Orig.</th>
+                                                                            <th style="width: 10%">Deuda<br>Actual</th>
+                                                                            <th style="width: 10%">Interés</th>
+                                                                            <th style="width: 10%">Deuda<br>Actualiz.</th>
+                                                                            <th style="width: 15%">Estado</th>
+                                                                            <th style="width: 7%">Info</th>
+                                                                            <th style="width: 4%">
+                                                                                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </ng-template>
+                                                                    <ng-template pTemplate="body" let-rowData let-detalles>
+                                                                        <tr class="ui-selectable-row">
+                                                                            <td>{{detalles.impuestoDesc}}</td>
+                                                                            <td>{{detalles.conceptoDesc}}</td>
+                                                                            <td *ngIf="detalles.impuesto+detalles.conceptoObligacion === '00110004' || detalles.impuesto+detalles.conceptoObligacion === '00120004' || detalles.impuesto+detalles.conceptoObligacion === '00130006' || detalles.impuesto+detalles.conceptoObligacion === '00240011' || detalles.impuesto+detalles.conceptoObligacion === '00150002'  || detalles.impuesto+detalles.conceptoObligacion === '00240003' ">{{detalles.numObligacion + '-' + detalles.anio}} </td>
+                                                                            <td *ngIf="detalles.impuesto+detalles.conceptoObligacion !== '00110004' && detalles.impuesto+detalles.conceptoObligacion !== '00120004' && detalles.impuesto+detalles.conceptoObligacion !== '00130006' && detalles.impuesto+detalles.conceptoObligacion !== '00240011' && detalles.impuesto+detalles.conceptoObligacion !== '00150002'  && detalles.impuesto+detalles.conceptoObligacion !== '00240003'  ">{{detalles.numCuota + '-' + detalles.anio}}</td>
+                                                                            <td>{{detalles.conceptoObligacion !== '0021' ? detalles.fechaPrimerVencimiento : '-'}}</td>
+                                                                            <td>{{detalles.importeOriginal| number:'1.2-2'}}</td>
+                                                                            <td>{{detalles.deudaActual| number:'1.2-2'}}</td>
+                                                                            <td>{{detalles.interes| number:'1.2-2'}}</td>
+                                                                            <td>{{detalles.importeActualizado| number:'1.2-2'}}</td>
+                                                                            <td>
+                                                                                <span class="ui-column-title">Estado</span>
+                                                                                <span [class]="'customer-badge status-' + detalles.estadoClass">{{detalles.estado}}</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button class="btn btn-info btn-circle waves-effect waves-circle waves-float" type="button" (click)="obtenerDetalle(detalles)">
+                                  <i class="material-icons">search</i>
+                                </button>
+                                                                            </td>
+                                                                            <td>
+                                                                                <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </ng-template>
+                                                                    <ng-template pTemplate="emptymessage">
+                                                                        <tr>
+                                                                            <td colspan="8" style="text-align:center">No se encontraron registros.</td>
+                                                                        </tr>
+                                                                    </ng-template>
+                                                                </p-table>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+                                                </p-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="infoCuenta" tabindex="-1" role="dialog" #tablaDetalleDeuda aria-labelledby="infoCuentaTitulo">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoCuentaTitulo">Movimientos de Cuenta Corriente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModalInfo()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive m-t-40">
+                    <table class="table table-hover" [innerHTML]="detalleDeuda">
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal" (click)="closeModalInfo()">Cerrar
+          </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

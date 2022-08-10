@@ -1,0 +1,70 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Cargar</strong> Noticia</h2>
+          </div>
+          <div class="body">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" method="POST" enctype="multipart/form-data">
+              <label for="titulo">Titulo *</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" id="titulo" formControlName="titulo" class="form-control" placeholder="Título de la Noticia">
+                </div>
+              </div>
+              <label for="subtitulo">Subtítulo</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" id="subtitulo" formControlName="subtitulo" class="form-control" placeholder="Subtítulo (opcional)">
+                </div>
+              </div>
+              <label for="subtitulo">Resumen portada</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <textarea class="materialize-textarea" formControlName="resumen" id="resumen" data-length="500"></textarea>
+                </div>
+              </div>
+              <label for="subtitulo">Imagen portada</label>
+              <div class="row clearfix">
+                <div class="col-sm-6">
+                    <div class="file-field input-field">
+                      <div class="btn">
+                        <span>Imagen</span>
+                        <input type="file" #file accept="image/*" (change)="addImage($event)" formControlName="imagenPortada">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" #filePath>
+                        <label class="error" *ngIf="errorImage">{{errorImage}}</label>
+                      </div>
+                    </div>
+                </div>
+                <div class="col-sm-6" *ngIf="imagenPortada">
+                  <img src="{{imagenPortada.preview.src}}" style="height: 250px;" />
+                  <br/>
+                  <button class="btn bg-red waves-effect" type="button" (click)="removeImage()">Quitar imagen</button>
+                </div>
+              </div>
+
+              <label for="contenido">Contenido</label>
+              <div class="form-group">
+                <div class="form-line">
+                    <div #editable class="col-12"
+                              style="min-height: 85vh"
+                              id="contenido"
+                              formControlName="contenido"
+                              ngDefaultControl
+                              (blur)="updateContenido(editable.innerHTML)"
+                    ></div>
+                </div>
+              </div>
+              <br>
+              <app-loading-button [title]="'Guardar'" [loading]="loading"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

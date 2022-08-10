@@ -1,0 +1,264 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <h3 class="pull-left">Datos del Contribuyente</h3>
+        <p class="pull-right">
+          <button type="button" class="btn btn-primary btn-small" routerLink="/clave-fiscal/inicio">Volver</button>
+        </p>
+      </div>
+    </div>
+    <div *blockUI="'visualizar-datos'">
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="contribuyente">
+          <div class="card">
+            <div class="header">
+              <h2><strong>Datos</strong> personales</h2>
+            </div>
+            <div class="body">
+              <small class="text-muted">CUIT:</small>
+              <p>{{contribuyente.cuit}}</p>
+              <hr>
+              <small class="text-muted">{{contribuyente.personeria === 'JURIDICA' ? 'Razón Social' : 'Nombre Completo'}}
+                :
+              </small>
+              <p>{{contribuyente.personeria === 'JURIDICA' ? contribuyente.razonSocial : contribuyente.nombreCompleto}}</p>
+              <hr>
+              <small class="text-muted">Email:</small>
+              <p>{{contribuyente.email}} <button type="button" class="btn btn-primary btn-small pull-right" (click)="openModalActualizarEmail()">Actualización de Datos</button></p>
+              <hr>
+            </div>
+            <div class="modal fade" id="actualizarEmail" tabindex="-1" role="dialog" #actualizarEmailModal
+                 aria-labelledby="formModal" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="formActualizarEmail">Cambio de dirección de mail</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+                    <form [formGroup]="formEmail">
+                      <label for="email">E-mail</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <input type="text" class="form-control" id="email" formControlName="email"
+                                 placeholder="Ingrese su nuevo e-mail">
+                          <ng-container *ngIf="submitted && f.importe_original.errors">
+                            <label class="error" *ngIf="f.importe_original.errors.required">Ingrese el importe de la deuda
+                              original</label>
+                            <label class="error" *ngIf="f.importe_original.errors.pattern">El importe debe ser un número</label>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-info waves-effect">Aceptar</button>
+                    <button type="button" class="btn btn-danger waves-effect"
+                            data-dismiss="modal">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card" *ngIf="responsables.length > 0">
+            <div class="header">
+              <h2><strong>Responsables</strong></h2>
+            </div>
+            <div class="body inscripcionCabecera" *ngFor="let responsable of responsables">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <small class="text-muted">Nombre Completo:</small>
+                  <span>{{responsable.razonSocial}}</span>
+                  <hr>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <small class="text-muted">Cargo:</small>
+                  <span>{{responsable.cargo}}</span>
+                  <hr>
+                </div>
+              </div>
+              <ng-container *ngIf="responsable.cuit">
+                <div class="row clearfix">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <small class="text-muted">CUIT:</small>
+                    <span>{{responsable.cuit}}</span>
+                    <hr>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!responsable.cuit">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <small class="text-muted">Tipo Documento:</small>
+                  <span>{{responsable.tipoDocumentoAbrev}}</span>
+                  <hr>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <small class="text-muted">Nro. Documento:</small>
+                  <span>{{responsable.numeroDocumento}}</span>
+                  <hr>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <h2><strong>Inscripciones</strong></h2>
+            </div>
+            <ng-container *ngFor="let padron of padrones;let idx=index">
+              <div class="body inscripcionCabecera">
+                <h5 class="col-blue">Padrón</h5>
+                <div class="row clearfix">
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Padrón:</small>
+                    <span>{{padron.padron}}</span>
+                    <hr>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Objeto:</small>
+                    <span>{{padron.objeto}}</span>
+                    <hr>
+                  </div>
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Categoría:</small>
+                    <span>{{padron.categoria}}</span>
+                    <hr>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Grupo:</small>
+                    <span>{{padron.grupo}}</span>
+                    <hr>
+                  </div>
+
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Catastro:</small>
+                    <span>{{padron.catastro}}</span>
+                    <hr>
+                  </div>
+
+                  <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <small class="text-muted">Categoria TGI:</small>
+                    <span>{{padron.categoriaTgi}}</span>
+                    <hr>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <small class="text-muted">Dirección:</small>
+                    <span>{{padron.domicilioFinal}}</span>
+                    <hr>
+                  </div>
+                </div>
+                <div class="row clearfix" *ngIf="padron.categoria2009">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <small class="text-muted">Categoria desde 2009:</small>
+                    <span>{{padron.categoria2009}}</span>
+                    <hr>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h5 class="m-t-10 col-amber">Inscripciones</h5>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                        <tr>
+                          <th class="text-center">Código</th>
+                          <th class="text-center">Inscripción</th>
+                          <th class="text-center">Fecha</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ng-container *ngIf="padron.periodosInscripcion.length > 0">
+                          <tr *ngFor="let periodo of padron.periodosInscripcion">
+                            <td class="text-center">{{periodo.codigo}}</td>
+                            <td class="text-center">{{periodo.descripcion}}</td>
+                            <td class="text-center">{{periodo.fechaInscripcion | date: 'dd/MM/yyyy'}}</td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="padron.periodosInscripcion.length === 0">
+                          <tr>
+                            <td colspan="3" class="text-center">No hay inscripciones registradas</td>
+                          </tr>
+                        </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="row clearfix">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h5 class="m-t-10 col-green">Actividades Principales</h5>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                        <tr>
+                          <th class="text-center">Código</th>
+                          <th class="text-center">Descripción</th>
+                          <th class="text-center">Inicio Actividad</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ng-container *ngIf="padron.actividadesPrincipales.length > 0">
+                          <tr *ngFor="let act of padron.actividadesPrincipales">
+                            <td class="text-center">{{act.actividad}}</td>
+                            <td class="text-center">{{act.actividadDescripcion}}</td>
+                            <td class="text-center">{{act.inscriptoDesde}}</td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="padron.actividadesPrincipales.length === 0">
+                          <tr>
+                            <td colspan="3" class="text-center">No hay actividades principales registradas</td>
+                          </tr>
+                        </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                    <h5 class="m-t-10 col-orange">Actividades Secundarias</h5>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                        <tr>
+                          <th class="text-center">Código</th>
+                          <th class="text-center">Descripción</th>
+                          <th class="text-center">Inicio Actividad</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ng-container *ngIf="padron.actividadesSecundarias.length > 0">
+                          <tr *ngFor="let act of padron.actividadesSecundarias">
+                            <td class="text-center">{{act.actividad}}</td>
+                            <td class="text-center">{{act.actividadDescripcion}}</td>
+                            <td class="text-center">{{act.inscriptoDesde}}</td>
+                          </tr>
+                        </ng-container>
+                        <ng-container *ngIf="padron.actividadesSecundarias.length === 0">
+                          <tr>
+                            <td colspan="3" class="text-center">No hay actividades secundarias registradas</td>
+                          </tr>
+                        </ng-container>
+                        </tbody>
+                      </table>
+                    </div>
+                    <hr class="bg-danger">
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

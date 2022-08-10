@@ -1,0 +1,144 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>HISTORIAL MULTAS</strong> DE TRÁNSITO</h2>
+          </div>
+          <div class="body">
+            <p>Por favor, ingrese dominio y clave para consultar el historial de multas</p>
+            <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Dominio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dominio" class="form-control"
+                             formControlName="dominio"
+                             placeholder="Ingrese un Dominio"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.required">Ingrese el dominio
+                          del vehículo</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.pattern">El formato del dominio
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                    <div class="help-info">Formato SIN guión medio y SIN espacios (ej: ABC123 o AB123CD)</div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Clave:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="password" id="clave" class="form-control"
+                             formControlName="clave"
+                             placeholder="Ingrese clave"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.required">Ingrese la clave</label>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.pattern">El formato de la clave es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-xs-12">
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </div>
+              </div>
+            </form>
+            <div class="row clearfix" *ngIf="multas">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Estado de Deuda <strong>Automotor</strong></h5>
+                  <h4><strong>Dominio:</strong> {{form.get('dominio').value}}</h4>
+                </div>
+                <div id="estadoDeudaCabecera" class="m-t-40">
+                  <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      Domicilio:
+                      <span>{{multas.domicilioImponible.domicilio}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Marca:
+                      <span>{{multas.login.marca}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Modelo:
+                      <span>{{multas.login.modelo}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Año:
+                      <span>{{multas.login.anioDom}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Grupo:
+                      <span>{{multas.login.grupo}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Categoría:
+                      <span>{{multas.login.categoria}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Nombre:
+                      <span>{{multas.fechaBaja ? '-' : multas.datosContribuyente.nombreCompleto}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      CUIT:
+                      <span>{{multas.fechaBaja ? '-' : multas.datosContribuyente.cuit}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="multas">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Historial de Multas de Tránsito</h5>
+                </div>
+                <div *ngIf="multas.historialMultas.length > 0; else noHistorial">
+                  <app-loading-button
+                    [title]="'Imprimir'"
+                    [loading]="loadingImprimir"
+                    [type]="'button'"
+                    (clickButton)="imprimirHistorial()"
+                  ></app-loading-button>
+                </div>
+                <ng-template #noHistorial>
+                  No registra Historial de Multas
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

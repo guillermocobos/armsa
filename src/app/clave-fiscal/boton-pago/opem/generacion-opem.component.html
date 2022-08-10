@@ -1,0 +1,141 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Pago Electrónico</strong> Municipal</h2>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+            <div class="table-responsive" *ngIf="tributosConceptos.length > 0">
+              <table class="table table-hover dashboard-task-infos" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" #tablaOpem>
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>Identificación</th>
+                  <th>Impuesto / Concepto</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let tc of tributosConceptos"
+                      [ngClass]="{'selected': tributoSelected && tc.id === tributoSelected.id}"
+                      (click)="onTributoChange(checkbox.checked, tc)"
+                  >
+                    <td class="tbl-checkbox">
+                      <label class="form-check-label">
+                        <input type="checkbox" #checkbox
+                               [checked]="tributoSelected && tc.id === tributoSelected.id"
+                               (click)="onTributoChange(tributoSelected && tc.id === tributoSelected.id, tc)"
+                        >
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </td>
+                    <td>{{tc.identificacion}}</td>
+                    <td>{{tc.descripcion}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="header">
+            <h2><strong>Seleccionar</strong> Períodos y Método de Pago</h2>
+          </div>
+          <div class="body">
+            <form [formGroup]="form">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                  <label for="mesAnioDesde">Periodo Desde</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="datepicker form-control" id="mesAnioDesde" formControlName="periodoDesde" readonly
+                             placeholder="Periodo desde" #mesAnioDesde>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                  <label for="mesAnioHasta">Periodo Hasta</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="datepicker form-control" id="mesAnioHasta" formControlName="periodoHasta" readonly
+                             placeholder="Periodo hasta" #mesAnioHasta>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                  <app-loading-button
+                    [title]="'Consultar'"
+                    [loading]="loadingButton"
+                    [disabled]="!form.valid && !tributoSelected"
+                    [type]="'button'"
+                    (click)="consultarPeriodo()"
+                  ></app-loading-button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Periodos</strong> Adeudados</h2>
+          </div>
+          <div class="body">
+            <ng-container *ngIf="periodosOPE.length > 0; else seleccionarTributo">
+              <p><strong>Número de Transacción:</strong> {{numeroOPE}}</p>
+              <div class="table-responsive">
+                <table class="table table-hover dashboard-task-infos" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTriggerPeriodos" #tablaPeriodos>
+                  <thead>
+                  <tr>
+                    <th class="center">
+                      <label class="form-check-label">
+                        <input type="checkbox"
+                               [checked]="selectAllChecked"
+                               (click)="selectUnselectAll($event)"
+                        >
+                        <span class="form-check-sign"></span>
+                      </label>
+                    </th>
+                    <th>Periodo</th>
+                    <th>Importe Adeudado</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let periodo of periodosOPE">
+                      <td class="tbl-checkbox">
+                        <label class="form-check-label">
+                          <input type="checkbox" #checkbox
+                                 [checked]="periodo.selected"
+                                 (change)="onSelectPeriodo($event, periodo)"
+                          >
+                          <span class="form-check-sign"></span>
+                        </label>
+                      </td>
+                      <td>{{periodo.periodo}}</td>
+                      <td>{{periodo.importe_adeudado}}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td>
+                        Deuda Total: <strong>${{deudaTotal}}</strong>
+                      </td>
+                      <td colspan="2">
+                        Su pago: <strong>${{totalPagar}}</strong>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </ng-container>
+            <ng-template #seleccionarTributo>
+              <p>Seleccione un tributo y los periodos a consultar</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+<section class="content">
+  <div class="container-fluid">
+
+     <!-- Vertical Layout -->
+     <!-- JSilva, Incid 109523-->
+     <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Descargas</strong></h2>
+          </div>
+          <div class="body">
+            <p>La descarga de "SIPRET" puede demorar varios minutos.</p>
+            <div class="row clearfix">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <p class="center">
+                  <app-loading-button
+                    [title]="'Instructivo descarga Mobile ARMSa'"
+                    [loading]="loadingInstructivo"
+                    (clickButton)="descargarInstructivo()"
+                    [hasIcon]="true"
+                    [materialIcon]="'file_download'"
+                    [additionalClass] = "'btn-large'">
+                  </app-loading-button>
+                </p>
+              </div>
+
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <p class="center">
+                  <app-loading-button
+                    [title]="'Descargar SIPRET'"
+                    [loading]="loadingSipret"
+                    (clickButton)="descargarSipret()"
+                    [hasIcon]="true"
+                    [materialIcon]="'file_download'"
+                    [additionalClass] = "'btn-large'">
+                  </app-loading-button>
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     <!--
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Descarga</strong> de SIPRET</h2>
+          </div>
+          <div class="body">
+            <p>A continuación haga clic en el botón "Descargar SIPRET" para iniciar la descarga.</p>
+            <p class="center">
+              <app-loading-button
+              [title]="'Descargar SIPRET'"
+              [loading]="loading"
+              (clickButton)="descargarSipret()"
+              [hasIcon]="true"
+              [materialIcon]="'file_download'"
+              [additionalClass] = "'btn-large'"
+            ></app-loading-button></p>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <div class="card">
+      <div class="header">
+        <h2><strong>Descargas</strong></h2>
+      </div>
+      <div class="card-body">
+        <div class="body">
+          <div class="list-group">
+            <button type="button" class="list-group-item" (click)="descargarInstructivo()">Instructivo descarga Mobile ARMSa</button>
+            <button type="button" class="list-group-item" (click)="descargarSipret()">Descarga Sipret</button>
+          </div>
+        </div>
+
+      </div>
+    </div>-->
+
+  </div>
+</section>

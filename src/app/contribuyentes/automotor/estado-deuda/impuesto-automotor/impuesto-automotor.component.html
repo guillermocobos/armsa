@@ -1,0 +1,121 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>ESTADO DE DEUDA</strong> IMPUESTO AUTOMOTOR</h2>
+          </div>
+          <div class="body">
+            <p>Por favor, ingrese dominio y clave para realizar la consulta</p>
+            <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Dominio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dominio" class="form-control"
+                        formControlName="dominio"
+                        placeholder="Ingrese un Dominio"
+                        upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.required">Ingrese el dominio
+                          del vehículo</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.pattern">El formato del dominio
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                    <div class="help-info">Formato SIN guiones y SIN espacios (ej: ABC123 o AB123CD)</div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Clave:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="password" id="clave" class="form-control"
+                        formControlName="clave"
+                        placeholder="Ingrese clave"
+                        upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.required">Ingrese la clave</label>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.pattern">El formato de la clave es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-12 col-xs-12">
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </div>
+
+              </div>
+            </form>
+            <div class="row clearfix" *ngIf="estadoCuenta">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="header bg-amber">
+                    <h2>Filtro de Búsqueda</h2>
+                  </div>
+                  <div class="body">
+                    <form id="form_recalculo" method="POST" [formGroup]="formBuscar" (ngSubmit)="buscarEstadoCuenta()">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                          <label for="anioInicio">Año inicio</label>
+                          <div class="form-group">
+                            <div class="form-line">
+                              <div class="form-line">
+                                <input type="text" class="form-control" formControlName="anioInicio"
+                                  id="anioInicio"
+                                  placeholder="Ingrese año de inicio..."
+                                >
+                              </div>
+                            </div>
+                            <ng-container *ngIf="submittedBuscar && fr.anioInicio.errors">
+                              <label class="error" *ngIf="fr.anioInicio.errors.required">Debe ingresar el año de inicio</label>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                          <label for="anioFin">Año fin</label>
+                          <div class="form-group">
+                            <div class="form-line">
+                              <div class="form-line">
+                                <input type="text" class="form-control" formControlName="anioFin"
+                                  id="anioFin"
+                                  placeholder="Ingrese año de fin..."
+                                >
+                              </div>
+                            </div>
+                            <ng-container *ngIf="submittedBuscar && fr.anioFin.errors">
+                              <label class="error" *ngIf="fr.anioFin.errors.required">Debe ingresar el año de fin</label>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                      <app-loading-button
+                        [title]="'Buscar'"
+                        [loading]="loadingBuscar"
+                      ></app-loading-button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

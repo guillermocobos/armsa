@@ -1,0 +1,10 @@
+<section class="content">
+  <div class="container-fluid">
+    <app-cta-cte-unificada-grilla
+      [loadingButton]="loadingGenerarDetalle"
+      [buttonText]="'PAGAR POR BOLETAS'"
+      [tituloPagina]="'CUENTA CORRIENTE UNIFICADA'"
+      (clickButton)="generarDetallesVencimientos($event)"
+    ></app-cta-cte-unificada-grilla>
+  </div>
+</section>

@@ -1,0 +1,93 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>CONSULTA</strong> LIBRE DE DEUDA AUTOMOTOR</h2>
+          </div>
+          <div class="body">
+            <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="nroConstancia">Nro. Constancia:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="nroConstancia" class="form-control"
+                             formControlName="nroConstancia"
+                             placeholder="Ingrese un Nro. de Constancia"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.nroConstancia.errors && f.nroConstancia.errors.required">Ingrese
+                          el Nro. de Constancia</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="clave">Clave:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="password" id="clave" class="form-control"
+                             formControlName="clave"
+                             placeholder="Ingrese clave"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.required">Ingrese la clave</label>
+                        <label class="error" *ngIf="f.clave.errors && f.clave.errors.pattern">El formato de la clave es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="alert alert-info">
+                Guía del usuario: El PIN viene incorporado en las boletas que se reparten a domicilio
+              </div>
+            </form>
+            <div class="row clearfix" *ngIf="constanciaRegularizacion">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                  <div class="header bg-amber">
+                    <h2>Constancia de Regularización</h2>
+                  </div>
+                  <div class="body">
+                    <div class="row clearfix">
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <small class="text-muted">Constancia:</small>
+                        <p>{{form.get('nroConstancia').value}}</p>
+                        <hr>
+                        <small class="text-muted">Fecha:</small>
+                        <p>{{constanciaRegularizacion.login.fecha}}</p>
+                        <hr>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <small class="text-muted">Dominio:</small>
+                        <p>{{constanciaRegularizacion.login.dominio}}</p>
+                        <hr>
+                        <small class="text-muted">Deuda:</small>
+                        <p>{{constanciaRegularizacion.valorDeuda}}</p>
+                        <hr>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

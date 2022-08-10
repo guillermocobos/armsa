@@ -1,0 +1,132 @@
+<div class="row clearfix">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="body">
+        <form id="form_consulta_ddjj" method="POST" [formGroup]="form" (ngSubmit)="buscar()">
+          <div class="row clearfix">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <label for="impuesto">Impuesto</label>
+              <div class="form-group">
+                <div class="form-line input-field">
+                  <select id="impuesto" class="form-control" formControlName="impuesto" (change)="listarConceptos($event)">
+                    <option value="0000" [selected]="true" disabled>Seleccione un impuesto</option>
+                    <option *ngFor="let impuesto of impuestos" value="{{impuesto.id}}">{{impuesto.nombre}}</option>
+                  </select>
+                </div>
+                <ng-container *ngIf="submitted && f.impuesto.errors">
+                  <label class="error" *ngIf="f.impuesto.errors.required">Debe seleccionar un impuesto</label>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <label for="impuesto">Concepto Obligación</label>
+              <div class="form-group">
+                <div class="form-line input-field">
+                  <select id="concepto" class="form-control" formControlName="concepto">
+                    <option value="0000" [selected]="true" disabled>Seleccione un concepto</option>
+                    <option *ngFor="let concepto of conceptos" value="{{concepto.id}}">{{concepto.nombre}}</option>
+                  </select>
+                </div>
+                <ng-container *ngIf="submitted && f.concepto.errors">
+                  <label class="error" *ngIf="f.concepto.errors.required">Debe seleccionar un concepto</label>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="anio">Año</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="number" id="anio" class="form-control"
+                         formControlName="anio"
+                         placeholder="Ingrese el año"
+                  >
+                  <ng-container *ngIf="submitted && f.anio.errors">
+                    <label class="error" *ngIf="f.anio.errors.required">Ingrese el año</label>
+                    <label class="error" *ngIf="f.anio.errors.pattern">El año debe ser un número entero</label>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="periodoDesde">Período Desde</label>
+              <div class="form-group">
+                <div class="form-line">
+                    <input type="number" class="form-control" formControlName="periodoDesde" id="periodoDesde"
+                           placeholder="Ingrese el período desde...">
+                </div>
+                <ng-container *ngIf="submitted && f.periodoDesde.errors">
+                  <label class="error" *ngIf="f.periodoDesde.errors.required">Debe ingresar el período desde</label>
+                </ng-container>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <label for="periodoHasta">Período Hasta</label>
+              <div class="form-group">
+                <div class="form-line">
+                    <input type="number" class="form-control" formControlName="periodoHasta" id="periodoHasta"
+                           placeholder="Ingrese el período hasta..." >
+                </div>
+                <ng-container *ngIf="submitted && f.periodoHasta.errors">
+                  <label class="error" *ngIf="f.periodoHasta.errors.required">Debe ingresar el período hasta</label>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+          <app-loading-button [title]="'Buscar'" [loading]="loading"></app-loading-button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row clearfix" *blockUI="'visualizar-datos'">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2><strong>Presentaciones</strong> Realizadas</h2>
+      </div>
+      <div class="body">
+        <div class="table-responsive m-t-40">
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th class="text-center">Impuesto / Concepto Obligación</th>
+              <th class="text-center">Año</th>
+              <th class="text-center">Período</th>
+              <th class="text-center">Fecha de Proceso</th>
+              <th class="text-center">Ver Acuses</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngIf="presentaciones.length > 0; else noPresentaciones">
+              <tr *ngFor="let pres of presentaciones">
+                <td class="text-center">{{pres.descripcionImpuesto + ' / ' + pres.descripcionConcepto}}</td>
+                <td class="text-center">{{pres.anio}}</td>
+                <td class="text-center">{{pres.periodo}}</td>
+                <td class="text-center">{{pres.fechaProceso}}</td>
+                <td class="text-center">
+                  <app-loading-button
+                    [title]="'Imprimir'"
+                    [loading]="loadingImprimirAcuse && acuseActivo.transaccionId == pres.transaccionId"
+                    [type]="'button'"
+                    (click)="imprimirAcuse(pres)"
+                    [additionalClass]="'btn-sm btn-info'"
+                  ></app-loading-button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-template #noPresentaciones>
+              <tr>
+                <td colspan="4" class="text-center">No hay presentaciones registradas para esta búsqueda</td>
+              </tr>
+            </ng-template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

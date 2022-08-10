@@ -1,0 +1,104 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>LIQUIDACIÓN</strong> DE TASA DE VERIFICACIÓN</h2>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Volver'"
+              [type]="'button'"
+              routerLink="/clave-fiscal/estructuras-antenas/estructuras"
+            ></app-loading-button>
+            <app-loading-button
+              *ngIf="!loading && (datosTasaPeriodo.length === 0 || +datosTasaPeriodo[0].contribuyente === 0) "
+              [title]="'Generar Tasa de Verificación'"
+              [type]="'button'"
+              [additionalClass]="'pull-right'"
+              (click)="generarTasa()"
+              [loading]="loadingInsertar"
+            ></app-loading-button>
+          </div>
+          <div class="body" *blockUI="'visualizar-datos'">
+
+            <h5 class="m-b-15"><span class="font-underline">PERIODO:</span> {{thisYear}}</h5>
+
+            <div class="alert alert-info m-b-15" *ngIf="datosTasaPeriodo.length > 0 && +datosTasaPeriodo[0].contribuyente !== 0">
+              Sr Contribuyente: Existe generada una Obligación de la Tasa de Verificación para el año: {{thisYear}}
+            </div>
+
+            <div class="table-responsive m-t-15">
+              <table class="table table-hover" datatable
+                     [dtOptions]="dtOptions"
+                     [dtTrigger]="dtTrigger"
+                     #tablaInspeccion
+              >
+                <thead>
+                <tr>
+                  <th class="center">Estructura ID</th>
+                  <th class="center">Tipo Estructura</th>
+                  <th class="center">Cant. Sistemas de Antenas</th>
+                  <th class="center">Importe</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let datoInspeccion of datosInspeccion">
+                  <td class="center">
+                    {{datoInspeccion.estructuraId}}
+                  </td>
+                  <td class="center">
+                    {{datoInspeccion.tipoEstructura}}
+                  </td>
+                  <td class="center">
+                    {{datoInspeccion.cantAntenas}}
+                  </td>
+                  <td class="center">
+                    {{datoInspeccion.importe}}
+                  </td>
+                </tr>
+                </tbody>
+                <tfoot *ngIf="totalTasa">
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <th class="text-right">{{totalTasa.tipoEstructura}}</th>
+                  <th class="text-center">{{totalTasa.importe}}</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="confirmacion" tabindex="-1" role="dialog" #confirmacionModal
+             aria-labelledby="formModal" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="insertarInstalacionTitulo">Agregar Estructura</h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="cerrarModal()"
+                        aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  {{mensajeConfirmacion}}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect"
+                        data-dismiss="modal" (click)="cerrarModal()">Cerrar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+

@@ -1,0 +1,10 @@
+<button
+  type="{{type}}"
+  class="btn waves-effect {{additionalClass}} {{customClassColor}}" [ngClass]="marginTop + (!customClassColor ? ' btn-' + buttonColor : '')"
+  [disabled]="loading || disabled"
+  (click)="onClickButton()"
+> <ng-container *ngIf="!replaceLoading || (replaceLoading && !loading)">
+  <i *ngIf="hasIcon" class="material-icons">{{materialIcon}}</i> {{title}}
+  </ng-container>
+  <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+</button>

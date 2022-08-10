@@ -1,0 +1,48 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Constancia</strong> de Inscripción</h2>
+          </div>
+          <div class="body">
+            <form id="form_constancia_inscripcion" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <label for="cuit">CUIT</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" id="cuit" class="form-control"
+                         formControlName="cuit"
+                         placeholder="Ingrese su CUIT"
+
+                  >
+                </div>
+                <ng-container *ngIf="submitted && f.cuit.errors">
+                  <label class="error" *ngIf="f.cuit.errors.required">Debe ingresar su número de CUIT</label>
+                  <label class="error" *ngIf="f.cuit.errors.cuit">El número de CUIT ingresado es inválido</label>
+                </ng-container>
+              </div>
+              <label for="recaptcha">Verificación</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <re-captcha formControlName="recaptcha" id="recaptcha" ></re-captcha>
+                  <ng-container *ngIf="submitted && f.recaptcha.errors">
+                    <label class="error" *ngIf="f.recaptcha.errors.required">Debe marcar la casilla de verificación</label>
+                  </ng-container>
+                </div>
+              </div>
+              <div class="alert bg-danger alert-dismissible" role="alert" *ngIf="errorConstancia">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {{errorConstancia}}
+              </div>
+              <app-loading-button [title]="'Imprimir'" [loading]="loading"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

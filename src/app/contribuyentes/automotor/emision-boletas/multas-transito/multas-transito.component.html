@@ -1,0 +1,377 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix" *ngIf="mostrarListadoDeuda">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>MULTAS</strong> DE TRÁNSITO</h2>
+          </div>
+          <div class="body">
+            <p>Por favor, ingrese dominio y/o número de acta para consultar las multas</p>
+            <form id="form_automotor" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">Dominio:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="dominio" class="form-control"
+                             formControlName="dominio"
+                             placeholder="Ingrese un Dominio"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <div class="alert alert-warning" *ngIf="errorGeneral">
+                          {{errorGeneral}}
+                        </div>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.required">Ingrese el dominio
+                          del vehículo</label>
+                        <label class="error" *ngIf="errorDominio">{{errorDominio}}</label>
+                        <label class="error" *ngIf="f.dominio.errors && f.dominio.errors.pattern">El formato del dominio
+                          es
+                          incorrecto</label>
+                      </ng-container>
+                    </div>
+                    <div class="help-info">Formato sin guión medio ni espacios</div>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="dominio">N° de acta:</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" id="acta" class="form-control"
+                             formControlName="acta"
+                             placeholder="Ingrese el número de acta"
+                             upperCase
+                      >
+                      <ng-container *ngIf="submitted">
+                        <label class="error" *ngIf="f.acta.errors && f.acta.errors.required">Ingrese el nro de acta</label>
+                        <label class="error" *ngIf="f.acta.errors && f.acta.errors.pattern">El formato del nro de acta es incorrecto</label>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-xs-12">
+                  <app-loading-button [title]="'Consultar'" [loading]="loading"></app-loading-button>
+                </div>
+              </div>
+            </form>
+
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="pull-center"> Ahora puede pagar con:
+                  <div class="pull-center">
+                    <img src="assets/images/visa.png" style="width: 50px"/>
+                    <img src="assets/images/mastercard.png" style="width: 50px"/>
+                    <img src="assets/images/cabal_credito.png" style="width: 50px"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row clearfix" *ngIf="multas">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="alert alert-info">
+                  Para poder acceder al Régimen de Regularización Transitorio vigente debe dirigirse al <br/>
+                  TRIBUNAL ADMINISTRATIVO DE FALTAS sito en AV. PARAGUAY N° 1240, CP 4400, SALTA
+                </div>
+                <div>
+                  <h5>Estado de Deuda <strong>Automotor</strong></h5>
+                  <h4><strong>Dominio:</strong> {{form.get('dominio').value}}</h4>
+                </div>
+                <div id="estadoDeudaCabecera" class="m-t-40">
+                  <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      Domicilio:
+                      <span>{{multas.domicilioImponible.domicilio}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Marca:
+                      <span>{{multas.login.marca}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Modelo:
+                      <span>{{multas.login.modelo}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                      Año:
+                      <span>{{multas.login.anioDom}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Grupo:
+                      <span>{{multas.login.grupo}}</span>
+                      <hr>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Categoría:
+                      <span>{{multas.login.categoria}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      Nombre:
+                      <span>{{multas.fechaBaja ? '-' : multas.datosContribuyente.nombreCompleto}}</span>
+                      <hr>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      CUIT:
+                      <span>{{multas.fechaBaja ? '-' : multas.datosContribuyente.cuit}}</span>
+                      <hr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix" *ngIf="multas">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div>
+                  <h5>Multas de Tránsito</h5>
+                </div>
+                <div class="table-responsive m-t-40">
+                  <table class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th class="text-center">Año</th>
+                      <th class="text-center">Acta</th>
+                      <th class="text-center">Fecha Inf.</th>
+                      <th class="text-center">Impuesto</th>
+                      <th class="text-center">Gtos. Admin.</th>
+                      <th class="text-center">Subtotal</th>
+                      <th class="text-center">Fecha pago</th>
+                      <th class="text-center">Saldo</th>
+                      <th class="text-center">Observaciones</th>
+                      <th class="text-center">Boleta</th>
+                      <th class="text-center">Detalle</th>
+                      <th class="text-center">Pagar</th>
+                    </tr>
+                    </thead>
+                    <tbody *blockUI="'visualizar-datos'">
+                    <ng-container *ngIf="multas.multasAuto.length > 0; else noRegistros">
+                      <tr *ngFor="let multa of multas.multasAuto;let indice=index">
+                        <td class="text-center">{{multa.anio}}</td>
+                        <td class="text-center">{{multa.acta}}</td>
+                        <td class="text-center">{{multa.fechaInfraccion}}</td>
+                        <td class="text-center">{{(+multa.impuesto - (multa.gasto || 0)).toFixed(2)}}</td>
+                        <td class="text-center">{{multa.gasto ? multa.gasto.toFixed(2) : 0.00}}</td>
+                        <td class="text-center">{{multa.subtotal}}</td>
+                        <td class="text-center">{{multa.fechaPago}}</td>
+                        <td class="text-center">{{multa.saldo}}</td>
+                        <td class="text-center">{{multa.observaciones}}</td>
+                        <td class="text-center">
+                          <ng-container
+                            *ngIf="+multa.saldo === 0.00 || multa.accesorios_2 === 'N' || multa.estadoPlanPago === 'S' || multa.estadoVehDetenido === 'N'; else boleta">
+
+                          </ng-container>
+                          <ng-template #boleta>
+                            <button
+                              class="btn bg-blue btn-circle waves-effect waves-circle waves-float"
+                              type="button"
+                              (click)="imprimirBoleta(multa, indice)"
+                            >
+                            <i [ngClass]="{
+                              'material-icons':!loadingImprimirBoleta[indice],
+                              'fas fa-spinner fa-spin':loadingImprimirBoleta[indice]
+                            }"><span *ngIf="!loadingImprimirBoleta[indice]">print</span></i>
+                            </button>
+                          </ng-template>
+                        </td>
+                        <td class="text-center">
+                          <button
+                            class="btn bg-blue btn-circle waves-effect waves-circle waves-float"
+                            type="button"
+                            (click)="datosActaInfraccion(multa.acta)"
+                          >
+                            <i class="fas fa-list-ul"></i>
+                          </button>
+                        </td>
+                        <td class="text-center">
+                          <ng-container
+                            *ngIf="+multa.saldo === 0.00 || multa.accesorios_2 === 'N' || multa.estadoPlanPago === 'S' || multa.estadoVehDetenido === 'N'; else pagar">
+
+                          </ng-container>
+                          <ng-template #pagar>
+                            <button
+                              class="btn bg-blue btn-circle waves-effect waves-circle waves-float"
+                              type="button"
+                              (click)="pagarBoleta(multa, indice)"
+                            >
+                              <i class="fas fa-credit-card"></i>
+                            </button>
+                          </ng-template>
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noRegistros>
+                      <tr>
+                        <td colspan="12" class="text-center">No se encontraron registros</td>
+                      </tr>
+                    </ng-template>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="alert alert-warning" *ngIf="multas.multasAuto.length > 0">
+                  LAS MULTAS DE TRÁNSITO QUE NO PUEDAN EMITIRSE SU BOLETA, DEBEN SER GESTIONADAS EN EL TRIBUNAL DE FALTAS.<br/>
+                  SR. INFRACTOR: RECUERDE QUE CUENTA CON 30 DÍAS HÁBILES DESDE LA FECHA DE INFRACCIÓN PARA EFECTUAR SU DESCARGO EN EL TRIBUNAL ADMINISTRATIVO DE FALTAS
+                  sito en AV. PARAGUAY N° 1240, CP 4400, SALTA
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="detalleMulta" tabindex="-1" role="dialog" #detalleMulta
+                 aria-labelledby="detalleMultaTitulo">
+              <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="detalleMultaTitulo">Detalle del Acta</h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close" (click)="closeModal()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="container-fluid" *ngIf="datosActaInfracciones">
+                      <h4>Datos Generales</h4>
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <h5>Datos Vehículo</h5>
+                          <div class="row">
+                            <div class="col-md-6">Acta</div>
+                            <div class="col-md-6">{{datosActaInfracciones.datosActa.acta}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">Fecha Infracción</div>
+                            <div class="col-md-6">{{datosActaInfracciones.datosActa.fechaInfraccion}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">Estado</div>
+                            <div class="col-md-6">{{datosActaInfracciones.datosActa.abreviatura}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">Dominio</div>
+                            <div class="col-md-6">{{datosActaInfracciones.datosActa.dominio}}</div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4 border-left border-right">
+                          <h5>Lugar infracción</h5>
+                          <div class="row">
+                            <div class="col-md-6">Calle</div>
+                            <div
+                              class="col-md-6">{{datosActaInfracciones.datosActa.calleAbrev ? datosActaInfracciones.datosActa.calleAbrev : '---'}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">Altura</div>
+                            <div
+                              class="col-md-6">{{datosActaInfracciones.datosActa.altura1 ? datosActaInfracciones.datosActa.altura1 : '---'}}</div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <h5>Datos propietario (cédula verde)</h5>
+                          <div class="row">
+                            <div class="col-md-6">Titular</div>
+                            <div
+                              class="col-md-6">{{datosActaInfracciones.datosActa.cedulaVerdeTitular ? datosActaInfracciones.datosActa.cedulaVerdeTitular : '---'}}</div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-6">DNI</div>
+                            <div
+                              class="col-md-6">{{datosActaInfracciones.datosActa.cedulaVerdeDni ? datosActaInfracciones.datosActa.cedulaVerdeDni : '---'}}</div>
+                          </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <h4>Infracciones</h4>
+                            <div class="table-responsive m-t-40">
+                              <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                  <th class="text-center">Código</th>
+                                  <th class="text-center">Artículo</th>
+                                  <th class="text-center">Descripción</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr *ngFor="let infraccion of datosActaInfracciones.infracciones">
+                                  <td class="text-center">{{infraccion.infraccionId}}</td>
+                                  <td class="text-center">{{infraccion.articulo}}</td>
+                                  <td class="text-center">{{infraccion.descripcion}}</td>
+                                </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-danger waves-effect"
+                                data-dismiss="modal" (click)="closeModal()">Cerrar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *ngIf="mostrarFormularioTarjeta">
+      <app-form-pago-tarjeta [personaId]="personaId"
+                             [totalOperacion]="importeTotal"
+                             (pagoExitoso)="onPagoExitoso($event)"
+                             (onCancelar)="finalizar()"
+      ></app-form-pago-tarjeta>
+    </ng-container>
+
+    <div class="row clearfix" *ngIf="mostrarFinalizacion">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>PAGO CON TARJETA DE CREDITO</strong></h2>
+          </div>
+          <div class="body">
+            <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                 [innerHTML]="mensajeExitoso">
+              <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                      (click)="mensajeExitoso = false;">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="row clearfix">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                <app-loading-button class="pull-left"
+                                    [title]="'Regresar'"
+                                    [type]="'button'"
+                                    (clickButton)="finalizar()"
+                                    [buttonColor]="'info'"
+                ></app-loading-button>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                <app-loading-button class="pull-right m-r-20"
+                                    [title]="'Emitir Comprobante'"
+                                    [type]="'button'"
+                                    (clickButton)="imprimirComprobante()"
+                                    [buttonColor]="'warning'"
+                                    [loading]="loadingImprimir"
+                ></app-loading-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

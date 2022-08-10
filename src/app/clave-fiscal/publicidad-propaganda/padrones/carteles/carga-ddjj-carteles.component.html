@@ -1,0 +1,394 @@
+<section class="content">
+  <div class="container-fluid">
+
+    <div class="row clearfix" *ngIf="mostrarListaCarteles">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>IMPONIBLES INSCRIPTOS EN <strong> PUBLICIDAD Y PROPAGANDA</strong></h2>
+            <button type="button" class="btn btn-info waves-effect m-t-15" (click)="volverPadrones()">Volver</button>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Agregar Cartel'"
+              [type]="'button'"
+              (click)="agregarCartel()"
+              [additionalClass]="'pull-right'"
+            ></app-loading-button>
+          </div>
+          <div class="body">
+            <p class="font-bold">Datos del Anuncio - Carteles</p>
+            <p>Padrón: {{padron.col01}} - Objeto: {{padron.col02}}</p>
+            <div class="row clearfix" *blockUI="'visualizar-datos'">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="table-responsive">
+                  <table class="table table-hover" datatable
+                         [dtOptions]="dtOptions"
+                         [dtTrigger]="dtTrigger"
+                         #tablaPadrones
+                  >
+                    <thead>
+                    <tr>
+                      <th class="center">Texto Cartel</th>
+                      <th class="center">Alto</th>
+                      <th class="center">Ancho</th>
+                      <th class="center">Faz</th>
+                      <th class="center">Cantidad</th>
+                      <th class="center">Zona</th>
+                      <th class="center">Características</th>
+                      <th class="center">Cant. Vehículos</th>
+                      <th class="center">Total ($)</th>
+                      <th class="center">Quitar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let cartel of carteles">
+                      <td class="center">{{cartel.textoAnuncio}}</td>
+                      <td class="center">{{cartel.alto}}</td>
+                      <td class="center">{{cartel.ancho}}</td>
+                      <td class="center">{{cartel.faz}}</td>
+                      <td class="center">{{cartel.cantidad}}</td>
+                      <td class="center">{{cartel.zona}}</td>
+                      <td class="center">{{cartel.caracteristica}}</td>
+                      <td class="center">{{cartel.cantidadVehiculos}}</td>
+                      <td class="center">{{cartel.subtotal.toFixed(2)}}</td>
+                      <td class="center">
+                        <button class="btn btn-sm bg-light-blue waves-effect" type="button"
+                                (click)="openQuitarModal(cartel)"
+                        >
+                          Quitar
+                        </button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <app-loading-button *ngIf="carteles.length > 0"
+                  [buttonColor]="'info'"
+                  [title]="'Presentar'"
+                  [type]="'button'"
+                  [loading]="loadingPresentar"
+                  (click)="presentarDDJJ()"
+                ></app-loading-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix" *ngIf="mensajePresentarDDJJ">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>IMPONIBLES INSCRIPTOS EN <strong> PUBLICIDAD Y PROPAGANDA</strong></h2>
+          </div>
+          <div class="body">
+            <p class="font-bold">Finalización de Trámite</p>
+            <p>Padrón: {{padron.col01}} - Objeto: {{padron.col02}}</p>
+
+            <div class="alert alert-info m-b-15 m-t-15">
+              {{mensajePresentarDDJJ}}
+            </div>
+
+            <button type="button" class="btn btn-info waves-effect m-t-15" (click)="volverPadrones">Volver a Padrones</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="eliminarCartel" tabindex="-1" role="dialog" #eliminarCartelModal
+         aria-labelledby="formModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="formActualizarEmail">Eliminar Cartel</h5>
+            <button type="button" class="close" data-dismiss="modal" (click)="cerrarModalEliminacion()"
+                    aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            ¿Está seguro de querer quitar el cartel?
+          </div>
+          <div class="modal-footer">
+            <app-loading-button
+              [title]="'Quitar'"
+              [loading]="loadingQuitar"
+              [type]="'button'"
+              (click)="quitarCartel()"
+              [buttonColor]="'info'"
+              [additionalClass]="'m-l-10'"
+            ></app-loading-button>
+            <button type="button" class="btn btn-danger waves-effect"
+                    data-dismiss="modal" (click)="cerrarModalEliminacion()">Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix" *ngIf="mostrarFormCarteles">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2>Datos del Anuncio - <strong>Carteles</strong></h2>
+            <app-loading-button
+              [buttonColor]="'info'"
+              [title]="'Volver'"
+              [type]="'button'"
+              (click)="volver()"
+              [additionalClass]="'pull-right'"
+            ></app-loading-button>
+          </div>
+          <div class="body">
+
+            <p class="font-bold">Padrón objeto / Razón social:</p>
+            <p>Padrón: {{padron.col01}} - Objeto: {{padron.col02}}</p>
+
+            <form id="form_consulta_ddjj" method="POST" [formGroup]="form" (ngSubmit)="guardarCartel()">
+              <div class="alert alert-danger" *ngIf="errorGeneral" [innerHTML]="errorGeneral"></div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="fechaInstalacion">Fecha Instalación</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="fechaInstalacion" class="form-control datepicker"
+                             formControlName="fechaInstalacion"
+                             placeholder="Ingrese una fecha"
+                             readonly
+                             #fechaInstalacion
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted && f.fechaInstalacion.errors">
+                      <label class="error" *ngIf="f.fechaInstalacion.errors.required">Debe seleccionar una
+                        fecha</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="domicilioInstalacion">Domicilio del anuncio</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="domicilioInstalacion" class="form-control"
+                             formControlName="domicilioInstalacion"
+                             placeholder="Ingrese un domicilio"
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted && f.domicilioInstalacion.errors">
+                      <label class="error" *ngIf="f.domicilioInstalacion.errors.required">Debe ingresar un
+                        domicilio</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="textoAnuncio">Texto del anuncio</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="textoAnuncio" class="form-control"
+                             formControlName="textoAnuncio"
+                             placeholder="Ingrese un texto"
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted && f.textoAnuncio.errors">
+                      <label class="error" *ngIf="f.textoAnuncio.errors.required">Debe Ingresar un texto</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="telefonoAnunciante">Teléfono del Anunciante o Titular del medio de
+                    difusión</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control" formControlName="telefonoAnunciante"
+                             id="telefonoAnunciante"
+                             placeholder="Ingrese el teléfono...">
+                    </div>
+                    <ng-container *ngIf="submitted && f.telefonoAnunciante.errors">
+                      <label class="error" *ngIf="f.telefonoAnunciante.errors.required">Debe ingresar el
+                        teléfono</label>
+                    </ng-container>
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="zona">Zonificación</label>
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="zona" class="form-control" formControlName="zona">
+                        <option value="0000" [selected]="true" disabled>Seleccione una zona</option>
+                        <option *ngFor="let zona of zonas" value="{{zona.id}}">{{zona.nombre}}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && f.zona.errors">
+                      <label class="error" *ngIf="f.zona.errors.required">Debe seleccionar una zona</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <label for="telefonoAnunciante">Medidas en mts.</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <div class="row clearfix">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                          <label for="alto">Alto</label>
+                          <input type="text" class="form-control" formControlName="alto"
+                                 id="alto"
+                                 placeholder="Alto...">
+                          <ng-container *ngIf="submitted && f.alto.errors">
+                            <label class="error" *ngIf="f.alto.errors.required">Debe ingresar la altura</label>
+                          </ng-container>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                          <label for="ancho">Ancho</label>
+                          <input type="text" class="form-control" formControlName="ancho"
+                                 id="ancho"
+                                 placeholder="Ancho...">
+                          <ng-container *ngIf="submitted && f.ancho.errors">
+                            <label class="error" *ngIf="f.ancho.errors.required">Debe ingresar el ancho</label>
+                          </ng-container>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                          <label for="faz">Faz</label>
+                          <input type="text" class="form-control" formControlName="faz"
+                                 id="faz"
+                                 placeholder="Faz...">
+                          <ng-container *ngIf="submitted && f.faz.errors">
+                            <label class="error" *ngIf="f.faz.errors.required">Debe ingresar el faz</label>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="vehiculos">Cantidad de Vehículos</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <input type="number" id="vehiculos" class="form-control"
+                             formControlName="vehiculos"
+                             placeholder="Ingrese la cantidad de vehículos"
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted && f.vehiculos.errors">
+                      <label class="error" *ngIf="f.vehiculos.errors.required">Debe ingresar la cantidad de vehiculos</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="caracteristica">Características</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <select id="caracteristica" class="form-control"
+                              formControlName="caracteristica">
+                        <option *ngFor="let car of caracteristicas" value="{{car.id}}">{{car.nombre}}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && f.caracteristica.errors">
+                      <label class="error" *ngIf="f.caracteristica.errors.required">Debe seleccionar una
+                        característica</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                  <label for="cantidadCarteles">Cant. Carteles</label>
+                  <div class="form-group">
+                    <div class="form-line">
+                      <select id="cantidadCarteles" class="form-control"
+                              formControlName="cantidadCarteles">
+                        <option *ngFor="let cant of cantCarteles(); let idx = index;" value="{{idx+1}}">{{idx+1}}</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted && f.cantidadCarteles.errors">
+                      <label class="error" *ngIf="f.cantidadCarteles.errors.required">Debe seleccionar la cantidad de carteles</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      <label for="matriculaAnuncio">¿Usted posee matrícula por éste anuncio publicitario?</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <select id="matriculaAnuncio" class="form-control" (change)="onMatriculaAnuncioChange($event)"
+                                  formControlName="matriculaAnuncio">
+                            <option *ngFor="let fact of arraySiNo" value="{{fact.id}}">{{fact.nombre}}</option>
+                          </select>
+                        </div>
+                        <ng-container *ngIf="submitted && f.matriculaAnuncio.errors">
+                          <label class="error" *ngIf="f.matriculaAnuncio.errors.required">Seleccione una opción</label>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+                  </div>
+                  <div class="row clearfix" *ngIf="mostrarMatricula">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" >
+                      <label for="numeroExpediente">Expediente</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <input type="text" id="numeroExpediente" class="form-control"
+                                 formControlName="numeroExpediente"
+                                 placeholder="Ingrese el nro de Expediente"
+                          >
+                        </div>
+                        <ng-container *ngIf="submitted && f.numeroExpediente.errors">
+                          <label class="error" *ngIf="f.numeroExpediente.errors.required">Debe ingresar el nro de expediente</label>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      <label for="nroMatricula">Número Matrícula</label>
+                      <div class="form-group">
+                        <div class="form-line">
+                          <input type="text" id="nroMatricula" class="form-control"
+                                 formControlName="nroMatricula"
+                                 placeholder="Ingrese el nro de Matricula"
+                          >
+                        </div>
+                        <ng-container *ngIf="submitted && f.nroMatricula.errors">
+                          <label class="error" *ngIf="f.nroMatricula.errors.required">Debe ingresar la matrícula</label>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="text-right">
+                    <app-loading-button
+                      [title]="'Agregar Cartel'"
+                      [loading]="loadingCargaDDJJ"
+                    ></app-loading-button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

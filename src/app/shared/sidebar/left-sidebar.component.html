@@ -1,0 +1,224 @@
+<!-- Left Sidebar -->
+<aside id="leftsidebar" class="sidebar">
+  <!-- Menu -->
+  <div class="menu">
+    <ul class="list">
+      <!--<li>
+        <div class="sidebar-profile clearfix">
+          <div class="profile-img">
+            <img src="assets/images/usrbig.jpg" alt="profile">
+          </div>
+          <div class="profile-info">
+            <h3>Sarah Deo</h3>
+            <p>Welcome Admin !</p>
+          </div>
+        </div>
+      </li>-->
+      <li class="header">-- Principal</li>
+      <li routerLinkActive="active">
+        <a routerLink="inicio">
+          <i class="menu-icon ti-home"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+      <li routerLinkActive="active">
+        <a href="#" onClick="return false;" class="menu-toggle">
+          <i class="menu-icon fas fa-store col-blue"></i>
+          <span>T.I.S.S.H.</span>
+        </a>
+        <ul class="ml-menu">
+          <li routerLinkActive="active" *ngIf="!user">
+            <a routerlink="auth/login" href="#/auth/login">Acceso con Clave Fiscal (T.I.S.S.H)</a>
+          </li>
+          <li routerLinkActive="active">
+            <a routerLink="contribuyentes/constancia-inscripcion">Constancia de Inscripción</a>
+          </li>
+          <li routerLinkActive="active">
+            <a href="#" onClick="return false;">Sellado</a>
+          </li>
+          <!--<li routerLinkActive="active">
+            <a routerLink="contribuyentes/descarga-sipret">Descarga SIPRET</a>
+          </li>-->
+          <li routerLinkActive="active">
+            <a routerLink="contribuyentes/calculo-intereses">Cálculo de Intereses</a>
+          </li>
+        </ul>
+      </li>
+      <li routerLinkActive="active">
+        <a href="#" onClick="return false;" class="menu-toggle">
+          <i class="menu-icon fas fa-car col-red"></i>
+          <span>Automotor</span>
+        </a>
+        <ul class="ml-menu">
+          <li>
+            <a href="#" onClick="return false;" class="menu-toggle">
+              <span>Emisión o Pago de Boletas</span>
+            </a>
+            <ul class="ml-menu">
+              <li routerLinkActive="active">
+                <a routerLink="automotores/emision-boletas/impuesto-automotor">
+                  <span>Impuesto Automotor</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/emision-boletas/tasa-ambiental">
+                  <span>Tasa Ambiental</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/emision-boletas/multas-transito">
+                  <span>Multas de Tránsito</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/emision-boletas/historial-multas-transito">
+                  <span>Historial Multas de Tránsito con deuda</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/emision-boletas/planes-pago">
+                  <span>Planes de pago automotor</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" onClick="return false;" class="menu-toggle">
+              <span>Estado de Deuda</span>
+            </a>
+            <ul class="ml-menu">
+              <li routerLinkActive="active">
+                <a routerLink="automotores/estado-deuda/impuesto-automotor">
+                  <span>Impuesto Automotor</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/estado-deuda/tasa-ambiental">
+                  <span>Tasa Ambiental</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/estado-deuda/planes-pago">
+                  <span>Planes de Pago</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/estado-deuda/solicitud-constancia-deuda-regularizada">
+                  <span>Constancia de Deuda Regularizada</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="automotores/estado-deuda/consulta-constancia-deuda-regularizada">
+                  <span>Consulta Constancia de Deuda Regularizada</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li routerLinkActive="active">
+        <a href="#" onClick="return false;" class="menu-toggle">
+          <i class="menu-icon fas fa-building col-green"></i>
+          <span>Inmobiliario</span>
+        </a>
+        <ul class="ml-menu">
+          <li>
+            <a href="#" onClick="return false;" class="menu-toggle">
+              <span>Emisión o Pago de Boletas</span>
+            </a>
+            <ul class="ml-menu">
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/emision-boletas/impuesto-inmobiliario">
+                  <span>Impuesto Inmobiliario</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/emision-boletas/tgi">
+                  <span>Tasa Gral. Inmuebles</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/emision-boletas/planes-pago">
+                  <span>Planes de pago</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#" onClick="return false;" class="menu-toggle">
+              <span>Estado de Deuda</span>
+            </a>
+            <ul class="ml-menu">
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/estado-deuda/impuesto-inmobiliario">
+                  <span>Impuesto Inmobiliario</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/estado-deuda/tgi">
+                  <span>T.G.I</span>
+                </a>
+              </li>
+              <li routerLinkActive="active">
+                <a routerLink="inmobiliario/estado-deuda/planes-pago">
+                  <span>Planes de Pago</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li routerLinkActive="active" [hidden]="user">
+        <a routerlink="auth/login" href="#/auth/login">
+          <i class="fas fa-door-open col-red-armsa"></i>
+          <span>Acceso con Clave Fiscal</span>
+        </a>
+      </li>
+      <li routerLinkActive="active" [hidden]="!user">
+        <a href="#" onClick="return false;" class="menu-toggle">
+          <i class="fas fa-door-open col-red-armsa"></i>
+          <span>Usuario: {{user}}</span>
+        </a>
+
+        <ul class="ml-menu">
+          <li routerLinkActive="active">
+            <a href="#" onClick="return false;">
+              <i class="material-icons">person</i>Datos de contribuyente
+            </a>
+          </li>
+          <li routerLinkActive="active">
+            <a (click)="logout()">
+              <i class="material-icons">power_settings_new</i>Desconectar
+            </a>
+          </li>
+        </ul>
+      </li>
+
+    </ul>
+  </div>
+  <!-- #Menu -->
+</aside>
+<!-- #END# Left Sidebar
+
+<li class="dropdown user_profile" *ngIf="user">
+  <div class="dropdown-toggle" data-toggle="dropdown">
+    <div class="loggedUser">Usuario: {{user}}</div>
+  </div>
+  <ul class="dropdown-menu pullDown">
+    <li class="header">Opciones</li>
+    <li class="body">
+      <ul class="user_dw_menu">
+        <li>
+          <a href="#" onClick="return false;">
+            <i class="material-icons">person</i>Datos de contribuyente
+          </a>
+        </li>
+        <li>
+          <a (click)="logout()">
+            <i class="material-icons">power_settings_new</i>Desconectar
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</li>-->

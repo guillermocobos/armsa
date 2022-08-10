@@ -1,0 +1,468 @@
+﻿/*
+ *  Document   : dark.scss
+ *  Author     : RedStar Template
+ *  Description: This scss file for dark theme style classes
+ */
+ .dark {
+    background-color: #38424B;
+    color: #bbb;
+    padding-top: 1px;
+
+    body,
+    html {
+        background-color: #3c4452;
+    }
+
+    .dark-font-col {
+        color: #bbb;
+    }
+
+    .card {
+        background: #434f5a;
+        .body{
+            color: #bbb;
+        }
+        .header{
+            h2{
+                color: #bbb;
+            }
+        }
+    }
+    .banner-card{
+        background: #434f5a;
+    }
+    .plain-card{
+        background: #434f5a;
+    }
+
+    .people-list {
+
+        .chat-list {
+            li {
+                &:hover {
+                    background: #3f4650;
+                    cursor: pointer;
+                }
+
+                &.active {
+                    background: #262b33;
+                }
+
+            }
+
+        }
+
+    }
+
+    .chat {
+        .chat-history {
+            .message-data-time {
+                color: #bbb;
+            }
+        }
+
+    }
+
+    .contact-usertitle-name {
+        color: #fff;
+    }
+
+    .demo-skin {
+        color: #eaeaea;
+
+        .form-check-label {
+            color: #eaeaea;
+        }
+    }
+
+    .demo-settings {
+        color: #eaeaea;
+    }
+
+    .block-header {
+        padding-bottom: 0px;
+
+        h2 {
+            color: #bbb !important;
+
+        }
+    }
+
+    .select-wrapper {
+        input.select-dropdown {
+            color: #bbb;
+            font-size: 13px;
+        }
+    }
+
+    .breadcrumb {
+        li {
+            &.active {
+                color: #bbb;
+            }
+        }
+
+    }
+
+    .dropzone {
+        border: 1px solid #afacac !important;
+        background-color: #434f5a !important;
+    }
+
+    .sl-item {
+        .sl-content {
+            p {
+                color: #bbb;
+            }
+        }
+    }
+
+    .info-box5 {
+        background-color: #434f5a;
+    }
+
+    .form-check {
+        color: #bbb;
+    }
+
+    label {
+        color: #bbb;
+    }
+
+    .input-group {
+        .input-group-addon {
+            .material-icons {
+                color: #bbb;
+            }
+        }
+
+        input[type="text"],
+        .form-control {
+            color: #bbb;
+        }
+    }
+
+    .form-group {
+        .form-control {
+            color: #bbb;
+            background: #434f5a;
+        }
+
+        input.form-control {
+            color: #bbb;
+            border-bottom: 1px solid #eee;
+        }
+    }
+
+    .form-check {
+        .form-check-sign {
+            .check {
+                border: 1px solid #bbb;
+            }
+        }
+    }
+
+    .right-sidebar {
+        background: #343d44;
+    }
+
+   
+
+    .ms-container {
+
+        .ms-selectable,
+        .ms-selection {
+            li.ms-hover {
+                color: #bbb !important;
+                background-color: #46484e !important;
+            }
+        }
+    }
+
+    .nav-tabs {
+        li {
+            a.active {
+                color: #fff !important;
+            }
+        }
+
+    }
+
+    .bootstrap-tagsinput {
+        background-color: #343840 !important;
+    }
+
+    .to-do-list {
+        li {
+            background: #434f5a;
+        }
+    }
+
+    #mail-nav {
+        li {
+            a {
+                color: #bbb;
+            }
+        }
+    }
+
+    .max-texts {
+        a {
+            color: #bbb;
+        }
+    }
+
+    .pricingTable {
+        background: #0c0c0c;
+
+        .pricingTable-header {
+            background: #36373c;
+        }
+    }
+
+    .profile-tab-box {
+        background: #434f5a;
+    }
+
+    .cd-timeline-content {
+        background: #515b6d;
+    }
+
+    .cd-timeline-content h2 {
+        color: #bbb;
+    }
+
+    .chart-note {
+        color: #bbb;
+
+    }
+
+    .chart-statis {
+        .index {
+            color: #bbb;
+        }
+    }
+
+    .dataTables_wrapper {
+        input[type="search"] {
+            color: #bbb;
+        }
+    }
+
+    .page-item.disabled .page-link {
+        color: #bbb;
+        pointer-events: none;
+        cursor: auto;
+        background-color: #434f5a;
+    }
+
+    .table {
+    	color: #b7b7b7;
+        tbody {
+            tr {
+
+                td,
+                th {
+                    border-top: 1px solid rgba(120, 130, 140, 0.5);
+                    border-bottom: 1px solid rgba(120, 130, 140, 0.5);
+
+                }
+                &:hover{
+                    color: #9aa0ac;  
+                }
+            }
+
+        }
+
+        thead {
+            tr {
+                th {
+                    border-bottom: 1px solid rgba(120, 130, 140, 0.5);
+                    border-top: 1px solid rgba(120, 130, 140, 0.5);
+                }
+            }
+        }
+    }
+
+    .table-bordered {
+        tbody {
+            tr {
+
+                td,
+                th {
+                    border-bottom: 1px solid rgba(120, 130, 140, 0.5);
+                }
+            }
+        }
+
+        thead {
+            tr {
+                th {
+                    border-bottom: 1px solid rgba(120, 130, 140, 0.5);
+                }
+            }
+        }
+    }
+
+    tr.group,
+    tr.group:hover {
+        background-color: #282d35 !important;
+    }
+
+    .tableBody {
+        color: #bbb;
+    }
+
+    $theme-black: #434f5a;
+    .card .header h2 strong {
+        color: #bbb !important;
+    }
+    .breadcrumb li a {
+        color: #F1D065 !important;
+    }
+  
+    //     .sidebar {
+    //         background: #434f5a !important;
+        
+    // }
+    .counter-box,
+    .box-part{
+    	background: #434f5a !important;
+    	color: #bbb;
+    }
+    .tblActnBtn i{
+    	color: #bbb;
+    }
+    .chat .chat-history {
+	.other-message {
+		background: #3b4453;
+		&:after {
+			border-bottom-color: #3b4454;
+		}
+	}
+	.message {
+		color: #bbb;
+	}
+	.my-message {
+		background: #343840;
+		&:after {
+			border-bottom-color: #343840;
+		}
+	}
+	}
+	.taskbar .card-footer {
+    	background: #434f5a !important;
+	}
+	.move {
+	    background: #434f5a;
+	}
+	.board{
+		    background-color: #353a46;
+		    .drop-card{
+		    	background-color: #404754;
+		    }
+	}
+	.list-group-item{
+		background: #434f5a;
+	}
+	.product-grid .product-content {
+    	background-color: #3b4453;
+    }
+    .ibox-title,
+    .ibox-content{
+    	background: #434f5a;
+    	border-color: #6c757d;
+    }
+    .collapsible-header{
+    	background: #434f5a;
+    }
+    .card .card-inside-title{
+    	color: #bbb;
+    }
+    .left-timeline > li {
+	&:nth-child(odd) {
+		.left-label {
+			background: #202529;
+			&:after {
+				border-right-color: #202428;
+			}
+		}
+		.left-time span:last-child {
+			color: #eee;
+		}
+	}
+	.left-label {
+		background: #303438;
+		p {
+			color: #bbb;
+		}
+		&:after {
+			border-right-color: #303438;
+		}
+	}
+	.empty span {
+		color: #bbb;
+	}
+	.left-time span {
+		&:first-child {
+			color: #bbb;
+		}
+		&:last-child {
+			color: #eae9e9;
+		}
+	}
+}
+		.font-icon .icon-preview i{
+			color: #bbb;
+		}
+		.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link{
+			background-color : transparent;
+		}
+		.panel-group {
+			.panel-primary .panel-title a {
+				color: #bbb;
+				background: #32363c;
+			}
+			.panel .panel-body {
+				color: #bbb;
+			}
+		}
+		.btn-outline-primary {
+		    color: #bbb !important;
+		    border: 1px solid #bbb !important;
+}
+.dropdown-content{
+    background-color: #343d44;
+    li>span{
+        font-size: 13px;
+        color: #bbb;
+    }
+}
+.select-dropdown li.disabled{
+    color: #bbb;
+    font-size: 13px
+}
+
+.fc-unthemed td{
+    border-color: #696f73;
+    &.fc-today {
+        background: #343a40;
+    }
+}
+
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: rgba(187, 187, 187, 0.7);
+  }
+  ::-moz-placeholder { /* Firefox 19+ */
+    color: rgba(187, 187, 187, 0.7);
+  }
+  :-ms-input-placeholder { /* IE 10+ */
+    color: rgba(187, 187, 187, 0.7);
+  }
+  :-moz-placeholder { /* Firefox 18- */
+    color: rgba(187, 187, 187, 0.7);
+  }
+
+
+}

@@ -1,0 +1,95 @@
+<section class="content">
+  <div class="container-fluid">
+    <!-- Vertical Layout -->
+    <div class="row clearfix">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Cálculo</strong> de Intereses</h2>
+          </div>
+          <div class="body">
+            <form id="form_calculo_intereses" method="POST" [formGroup]="form" (ngSubmit)="onSubmit()">
+              <label for="impuesto">Impuesto</label>
+              <div class="form-group">
+                <div class="form-line input-field">
+                  <select id="impuesto" class="form-control" formControlName="impuesto">
+                    <option value="" [selected]="true" disabled>Seleccione un impuesto</option>
+                    <option *ngFor="let impuesto of impuestos" value="{{impuesto.id}}">{{impuesto.name}}</option>
+                  </select>
+                </div>
+                <ng-container *ngIf="submitted && f.impuesto.errors">
+                  <label class="error" *ngIf="f.impuesto.errors.required">Debe seleccionar un impuesto</label>
+                </ng-container>
+              </div>
+              <label for="importe_original">Importe de la deuda original</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <input type="text" id="importe_original" class="form-control"
+                         formControlName="importe_original"
+                         placeholder="Ingrese un importe"
+                  >
+                  <ng-container *ngIf="submitted && f.importe_original.errors">
+                    <label class="error" *ngIf="f.importe_original.errors.required">Ingrese el importe de la deuda
+                      original</label>
+                    <label class="error" *ngIf="f.importe_original.errors.pattern">El importe debe ser un número</label>
+                  </ng-container>
+                </div>
+              </div>
+              <label for="vencimiento_original">Fecha de Vencimiento Original</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <div class="form-line">
+                    <input type="text" class="datepicker form-control" formControlName="vencimiento_original" readonly
+                           id="vencimiento_original"
+                           placeholder="Seleccione la fecha de vencimiento original...">
+                  </div>
+                </div>
+                <ng-container *ngIf="submitted && f.vencimiento_original.errors">
+                  <label class="error" *ngIf="f.vencimiento_original.errors.required">Debe seleccionar una fecha</label>
+                </ng-container>
+              </div>
+              <label for="fecha_pago">Fecha de Pago</label>
+              <div class="form-group">
+                <div class="form-line">
+                  <div class="form-line">
+                    <input type="text" class="datepicker form-control" formControlName="fecha_pago" id="fecha_pago"
+                           placeholder="Seleccione una fecha de pago..." readonly>
+                  </div>
+                </div>
+                <ng-container *ngIf="submitted && f.fecha_pago.errors">
+                  <label class="error" *ngIf="f.fecha_pago.errors.required">Debe seleccionar una fecha</label>
+                </ng-container>
+              </div>
+              <div class="alert bg-danger alert-dismissible" role="alert" *ngIf="errorCalculoIntereses">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                {{errorCalculoIntereses}}
+              </div>
+              <app-loading-button [title]="'Calcular'" [loading]="loading"></app-loading-button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngIf="interesCalculado">
+        <div class="card">
+          <div class="header">
+            <h2><strong>Intereses</strong> Calculados</h2>
+          </div>
+          <div class="body">
+            <div class="row text-center">
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <h3>Interés a Pagar</h3>
+                <div class="totalEarning"><h3>${{interesCalculado}}</h3></div>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <h3>Importe Total</h3>
+                <div class="totalEarning"><h3>${{importeTotal}}</h3></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

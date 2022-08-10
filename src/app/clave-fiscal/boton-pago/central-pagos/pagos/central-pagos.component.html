@@ -1,0 +1,263 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- Vertical Layout -->
+        <div class="row clearfix" *ngIf="mostrarFinalizacion">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <strong>CENTRAL DE PAGOS - CUENTA CORRIENTE UNIFICADA</strong>
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                            [innerHTML]="mensajeExitoso">
+                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                                (click)="mensajeExitoso = false">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                                <app-loading-button class="pull-left" [title]="'Nuevo Pago'" [type]="'button'"
+                                    (clickButton)="nuevoPago()" [buttonColor]="'info'"></app-loading-button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                                <app-loading-button class="pull-right" [title]="'Finalizar'" [type]="'button'"
+                                    (clickButton)="finalizar()"></app-loading-button>
+                                <app-loading-button class="pull-right m-r-20" [title]="'Emitir Comprobante'"
+                                    [type]="'button'" (clickButton)="imprimirComprobante()" [buttonColor]="'warning'"
+                                    [loading]="loadingImprimir"></app-loading-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row clearfix" *ngIf="mostrarFinalizacionInterbanking">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <strong>CENTRAL DE PAGOS - CUENTA CORRIENTE UNIFICADA</strong>
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                            [innerHTML]="mensajeExitoso">
+                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                                (click)="mensajeExitoso = false">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                                <app-loading-button class="pull-left" [title]="'Nuevo Pago'" [type]="'button'"
+                                    (clickButton)="nuevoPago()" [buttonColor]="'info'"></app-loading-button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                                <app-loading-button class="pull-right" [title]="'Finalizar'" [type]="'button'"
+                                    (clickButton)="finalizar()"></app-loading-button>
+                                <app-loading-button class="pull-right m-r-20" [title]="'Emitir Comprobante'"
+                                    [type]="'button'" (clickButton)="imprimirComprobanteProvisorioOpe() "
+                                    [buttonColor]="'warning'" [loading]="loadingImprimir"></app-loading-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix" *ngIf="mostrarFinalizacionOpem">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            <strong>CENTRAL DE PAGOS - CUENTA CORRIENTE UNIFICADA</strong>
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div role="alert" class="alert alert-success alert-dismissible" *ngIf="mensajeExitoso"
+                            [innerHTML]="mensajeExitoso">
+                            <button type="button" data-dismiss="alert" aria-label="Close" class="close"
+                                (click)="mensajeExitoso = false">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-left">
+                                <app-loading-button class="pull-left" [title]="'Nuevo Pago'" [type]="'button'"
+                                    (clickButton)="nuevoPago()" [buttonColor]="'info'"></app-loading-button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pull-right">
+                                <app-loading-button class="pull-right" [title]="'Finalizar'" [type]="'button'"
+                                    (clickButton)="finalizar()"></app-loading-button>
+                                <app-loading-button class="pull-right m-r-20" [title]="'Emitir Comprobante'"
+                                    [type]="'button'" (clickButton)="imprimirComprobanteProvisorioOpe() "
+                                    [buttonColor]="'warning'" [loading]="loadingImprimir"></app-loading-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-container *ngIf="mostrarMediosPago">
+            <div class="card">
+                <div class="header">
+                    <h2><strong>Seleccione medio de Pago</strong></h2>
+                </div>
+                <div class="body">
+                    <table class="body menu_clave_fiscal">
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    <button (click)="generarDetallesVencimientos('1')" value="1">
+                                        <img src="assets/images/visa.png" width="100" height="70" />
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <button (click)="generarDetallesVencimientos('104')" value="104">
+                                        <img src="assets/images/mastercard.png" width="100" height="70" />
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <button (click)="generarDetallesVencimientos('63')" value="63">
+                                        <img src="assets/images/cabal_credito.png" width="100" height="70" />
+                                    </button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">
+                                    <button>
+                                        <img src="assets/images/link.png" width="100" height="70" />
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <button (click)="generarDetallesVencimientosPagomiscuentas()"
+                                        *ngIf="personaId==417471">
+                                        <img src="assets/images/pagomiscuentas.jpg" width="100" height="70" />
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                  <button (click)="generarDetallesVencimientos('31')" value="31">
+                                    <img src="assets/images/logo_visa_debito.bmp" width="100" height="70" />
+                                  </button>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">
+                                    <button (click)="onClickInterbanking()">
+                                        <img src="assets/images/interbanking.jpg" width="100" height="70" />
+                                    </button>
+                                </th>
+                                <th class="text-center">
+                                    <button (click)="onClickOpem()">
+                                        <img src="assets/images/ope_tradicional.jpg" width="100" height="70" />
+                                    </button>
+                                </th>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                    </table>
+
+                    <div class="form-group">
+                        <app-loading-button [title]="'Cancelar'" style="margin-left: 10px;" (click)="nuevoPago()"
+                            [buttonColor]="'info'"></app-loading-button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="mostrarCtaCteUnificada">
+            <app-cta-cte-unificada-grilla [soloDeuda]="true" [medioPago]="medioPago"
+                [tituloPagina]="'CENTRAL DE PAGOS - CUENTA CORRIENTE UNIFICADA'" [buttonText]="'Pagar'"
+                (clickButton)="muestraCentralPagos($event)" [loadingButton]="loadingPagarTarjeta"
+                [refreshData]="!volverClicked">
+            </app-cta-cte-unificada-grilla>
+        </ng-container>
+        <!--
+    <ng-container *ngIf="mostrarCtaCteUnificada">
+      <app-cta-cte-unificada-grilla
+        [soloDeuda]="true"
+        [medioPago]="medioPago"
+        [tituloPagina]="'CENTRAL DE PAGOS - CUENTA CORRIENTE UNIFICADA'"
+        [buttonText]="'Pagar'"
+        (clickButton)="generarDetallesVencimientos($event)"
+        [loadingButton]="loadingPagarTarjeta"
+        [refreshData]="!volverClicked"
+      ></app-cta-cte-unificada-grilla>
+    </ng-container>-->
+        <ng-container *ngIf="mostrarFormularioTarjeta">
+            <app-form-pago-tarjeta [personaId]="personaId" [tipoTarjeta]="tipoTarjeta" [totalOperacion]="totalPagar"
+                (pagoExitoso)="onPagoExitoso($event)" (onCancelar)="volver()"></app-form-pago-tarjeta>
+        </ng-container>
+        <ng-container *ngIf="mostrarPagomiscuentas">
+            <app-pagomiscuentas [personaId]="personaId" [totalOperacion]="totalPagar" [detalles]="detalles"
+                [secuencia]="secuencia" (onFinalizar)="volver()" (onCancelar)="volver()"></app-pagomiscuentas>
+        </ng-container>
+
+        <div class="modal fade" id="modalInterbanking" tabindex="-1" role="dialog" aria-labelledby="infoCuentaTitulo"
+            #modalInterbanking>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoCuentaTitulo">
+                            {{ 'Confirmación de operación' }}
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            (click)="closeModalInterbanking()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal"
+                            (click)="closeModalInterbanking()">
+                            {{ detalles.length > 1 ? 'Cerrar' : 'Cancelar' }}
+                        </button>
+                        <button type="button" class="btn btn-info waves-effect" data-dismiss="modal"
+                            (click)="generarInterbanking()">
+                            Aceptar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalOpem" tabindex="-1" role="dialog" aria-labelledby="infoCuentaTitulo"
+            #modalOpem>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoCuentaTitulo">
+                            {{ detalles.length > 1 ? 'Error' : 'Confirmación de operación de OPEM' }}
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            (click)="closeModalOpem()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <select (change)="igualarCbu($event.target.value)" name="debitoAutomatico" class="form-control">
+                            <option value="">Seleccione CBU</option>
+                            <option *ngFor="let cbu of debitoAutomatico" [value]="cbu.numeroTarjeta">
+                                {{ cbu.numeroTarjeta }}
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal"
+                            (click)="closeModalOpem()">
+                            {{ detalles.length > 1 ? 'Cerrar' : 'Cancelar' }}
+                        </button>
+                        <button type="button" [disabled]="!debitoAutomatico" class="btn btn-info waves-effect"
+                            data-dismiss="modal" (click)="generarOpem()">
+                            Generar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

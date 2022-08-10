@@ -1,0 +1,103 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- Vertical Layout -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2><strong>CONSULTA DE DEDUCCIONES ADMITIDAS</strong></h2>
+                    </div>
+                    <div class="body">
+                        <form id="form_transacciones" method="POST" [formGroup]="form" (ngSubmit)="obtenerPercepciones()">
+                            <div class="row clearfix">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <label for="periodoDesde">Desde</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control datepicker" readonly formControlName="periodoDesde" id="periodoDesde" placeholder="Ingrese el periodo inicial a consultar">
+                                        </div>
+                                        <ng-container *ngIf="submitted && f.periodoDesde.errors">
+                                            <label class="error" *ngIf="f.periodoDesde.errors.required">Debe ingresar el período desde</label>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <label for="periodoHasta">Hasta</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control datepicker" readonly formControlName="periodoHasta" id="periodoHasta" placeholder="Ingrese el periodo final a consultar">
+                                        </div>
+                                        <ng-container *ngIf="submitted && f.periodoHasta.errors">
+                                            <label class="error" *ngIf="f.periodoHasta.errors.required">Debe ingresar el período hasta</label>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <label for="periodoHasta">Padrón: </label>
+                                    <select name="padrones" class="form-control">
+                                        <option value="">Seleccione Padrón</option>
+                                        <option *ngFor="let padron of padrones" [value]="padron.identificacionLarga">
+                                            {{ padron.identificacionLarga }}
+                                    </select>
+                                </div>
+                            </div>
+                            <app-loading-button [title]="'Buscar'" [loading]="loading" (click)="obtenerPercepciones"></app-loading-button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="percepciones.length> 0; else nopercepciones">
+            <div class="row clearfix" *blockUI="'visualizar-datos'">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive m-t-40">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Fecha</th>
+                                            <th class="text-center">Tipo Comprobante</th>
+                                            <th class="text-center">Numero Compr.</th>
+                                            <th class="text-center">Razon Social</th>
+                                            <th class="text-center">Cuit</th>
+                                            <th class="text-center">Padrón</th>
+                                            <th class="text-center">Importe</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngIf="percepciones.length> 0; else nopercepciones">
+                                            <tr *ngFor="let percepcion of percepciones ">
+                                                <td class="text-center">{{percepcion.fecha | date:'dd/MM/yyyy'}}</td>
+                                                <td class="text-center">{{percepcion.tipoComprobante}}</td>
+                                                <td class="text-center">{{percepcion.numeroComprobante}}</td>
+                                                <td class="text-center">{{percepcion.razonSocial}}</td>
+                                                <td class="text-center">{{percepcion.cuit }}</td>
+                                                <td class="text-center">{{percepcion.padron }}</td>
+                                                <td class="text-center">{{percepcion.valImporte | number:'1.0-2' }}</td>
+                                                <td>
+                                                    <button class="btn btn-info btn-circle waves-effect waves-circle waves-float" type="button">
+                                                        <i class="material-icons">search</i>
+                                                </button>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+      <ng-template #nopercepciones>
+        <tr>
+          <td colspan="4" class="text-center">No hay transacciones registradas para esta búsqueda</td>
+        </tr>
+      </ng-template>
+        <ng-template #nopercepciones></ng-template>
+    </div>
+</section>

@@ -1,0 +1,379 @@
+<div class="row clearfix">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+      <div class="header">
+        <h2 *ngIf="!debito && centralPagos">Pago con <strong>Tarjeta de Crédito</strong></h2>
+        <h2 *ngIf="debito && centralPagos">Pago con <strong>Tarjeta de Débito</strong></h2>
+        <h2 *ngIf="!centralPagos">Pago con <strong>Tarjeta de Crédito/Débito</strong></h2>
+      </div>
+
+      <div class="body">
+        <form id="form_pago_tarjeta" method="POST" [formGroup]="form" (ngSubmit)="procesarPago()" #formPagoTarjeta>
+          <div class="alert alert-danger" *ngIf="errorGeneral" [innerHTML]="errorGeneral"></div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_holder_name">Nombre del Titular</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="card_holder_name" class="form-control" data-decidir="card_holder_name"
+                             formControlName="card_holder_name" name="card_holder_name"
+                             placeholder="Titular" upperCase
+                      >
+                    </div>
+
+                    <ng-container *ngIf="submitted">
+                      <label class="error" *ngIf="f.card_holder_name.errors && f.card_holder_name.errors.required">Ingrese
+                        el nombre del titular</label>
+                      <label class="error" *ngIf="errorCardHolder">{{errorCardHolder}}</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="tipo_tarjeta">Tipo de Tarjeta</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="tipo_tarjeta" class="form-control" formControlName="tipo_tarjeta" (change)="onChangeTipoTarjeta($event)">
+                        <option value="" *ngIf="!debito">Seleccione un Tipo de Tarjeta</option>
+                        <option value="1" *ngIf="!debito">VISA</option>
+                        <option value="31" *ngIf="debito || !centralPagos">VISA DÉBITO</option>
+                        <option value="104" *ngIf="!debito">MASTERCARD</option>
+                        <option value="63" *ngIf="!debito">CABAL</option>
+                        <option hidden value="65">AMERICAN EXPRESS</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted">
+                      <label class="error" *ngIf="f.tipo_tarjeta.errors && f.tipo_tarjeta.errors.required">Seleccione
+                        un tipo de tarjeta</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_number">Número de Tarjeta</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="card_number" class="form-control"
+                             formControlName="card_number" name="card_number" data-decidir="card_number" inputInteger
+                             placeholder="Ingrese los 16 dígitos del Número de Tarjeta" maxlength="19"
+                             mask="0000 0000 0000 0000"
+                      >
+                    </div>
+
+                    <ng-container *ngIf="submitted">
+                      <label class="error" *ngIf="f.card_number.errors && f.card_number.errors.required">Ingrese el
+                        número
+                        de tarjeta</label>
+                      <label class="error" *ngIf="f.card_number.errors && f.card_number.errors.minlength">El
+                        número de tarjeta debe contener 16 dígitos</label>
+                      <label class="error" *ngIf="errorCardNumber">{{errorCardNumber}}</label>
+                      <label class="error" *ngIf="f.card_number.errors && f.card_number.errors.pattern">El formato del
+                        número de tarjeta es
+                        incorrecto</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="security_code">Código de Seguridad</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="security_code" class="form-control" data-decidir="security_code"
+                             formControlName="security_code" name="security_code" inputInteger maxlength="3"
+                             placeholder="XXX"
+                      >
+                    </div>
+
+                    <ng-container *ngIf="submitted">
+                      <label class="error" *ngIf="f.security_code.errors && f.security_code.errors.required">Ingrese el
+                        código de seguridad</label>
+                      <label class="error" *ngIf="errorSecurityCode">{{errorSecurityCode}}</label>
+                      <label class="error" *ngIf="f.security_code.errors && f.security_code.errors.pattern">El formato
+                        del
+                        código de seguridad es
+                        incorrecto</label>
+                      <label class="error" *ngIf="f.security_code.errors && f.security_code.errors.minlength">El
+                        código de seguridad debe contener 3 dígitos</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_expiration_month">Mes de vencimiento</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="card_expiration_month" class="form-control"
+                             data-decidir="card_expiration_month"
+                             formControlName="card_expiration_month" name="card_expiration_month"
+                             placeholder="MM" inputInteger maxlength="2"
+                      >
+                    </div>
+
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.card_expiration_month.errors && f.card_expiration_month.errors.required">Ingrese
+                        el
+                        mes de vencimiento</label>
+                      <label class="error" *ngIf="f.card_expiration_month.errors && f.card_expiration_month.errors.min">El
+                        mes no puede ser menor a 01</label>
+                      <label class="error" *ngIf="f.card_expiration_month.errors && f.card_expiration_month.errors.max">El
+                        mes no puede ser mayor a 12</label>
+                      <label class="error"
+                             *ngIf="f.card_expiration_month.errors && f.card_expiration_month.errors.minlength">El
+                        mes debe contener 2 dígitos</label>
+                      <label class="error" *ngIf="errorExpirationMonth">{{errorExpirationMonth}}</label>
+                      <label class="error"
+                             *ngIf="f.card_expiration_month.errors && f.card_expiration_month.errors.pattern">El
+                        formato del mes de vencimiento es incorrecto</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_expiration_year">Año de vencimiento</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="card_expiration_year" class="form-control"
+                             data-decidir="card_expiration_year"
+                             formControlName="card_expiration_year" name="card_expiration_year"
+                             placeholder="AA" inputInteger maxlength="2"
+                      >
+                    </div>
+
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.card_expiration_year.errors && f.card_expiration_year.errors.required">Ingrese el
+                        año de vencimiento</label>
+                      <label class="error" *ngIf="f.card_expiration_year.errors && f.card_expiration_year.errors.min">El
+                        año no puede ser menor a {{currentYear}}</label>
+                      <label class="error"
+                             *ngIf="f.card_expiration_year.errors && f.card_expiration_year.errors.minlength">El
+                        año debe contener 2 dígitos</label>
+                      <label class="error" *ngIf="errorExpirationYear">{{errorExpirationYear}}</label>
+                      <label class="error"
+                             *ngIf="f.card_expiration_year.errors && f.card_expiration_year.errors.pattern">El
+                        formato del año de vencimiento es incorrecto</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_holder_doc_type">Tipo de Documento</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <select id="card_holder_doc_type" class="form-control" formControlName="card_holder_doc_type"
+                              data-decidir="card_holder_doc_type">
+                        <option value="" [selected]="true">Seleccione un Tipo de Documento</option>
+                        <option value="dni">DNI</option>
+                        <option value="cuil">CUIL</option>
+                      </select>
+                    </div>
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.card_holder_doc_type.errors && f.card_holder_doc_type.errors.required">Seleccione
+                        el tipo de documento</label>
+                      <label class="error" *ngIf="errorCardHolderType">{{errorCardHolderType}}</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_holder_doc_number">Número de Documento</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="card_holder_doc_number" class="form-control"
+                             data-decidir="card_holder_doc_number"
+                             formControlName="card_holder_doc_number" name="card_holder_doc_number"
+                             placeholder="XXXXXXXX" inputInteger maxlength="8"
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.card_holder_doc_number.errors && f.card_holder_doc_number.errors.required">Ingrese
+                        el
+                        número de documento</label>
+                      <label class="error" *ngIf="errorCardHolderDocNumber">{{errorCardHolderDocNumber}}</label>
+                      <label class="error"
+                             *ngIf="f.card_holder_doc_number.errors && f.card_holder_doc_number.errors.pattern">El
+                        formato
+                        del número de documento es incorrecto</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_holder_doc_type">Cantidad de Cuotas</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+
+
+                     <!-- <select id="installments" class="form-control" formControlName="installments">
+                        <option value="">Seleccione cantidad de cuotas</option>
+                        <option value="1">1</option>
+                      </select>-->
+
+                      <select id="installments" class="form-control" formControlName="installments"
+                              (change)="onChangeCuotas($event)"  >
+                        <option value="1" [selected]="true">1</option>
+                        <option value="3" *ngIf="visa">3</option>
+                        <option value="6" *ngIf="visa">6</option>
+                        <option value="12" *ngIf="visa">12</option>
+                      </select>
+
+                    </div>
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.installments.errors && f.installments.errors.required">Seleccione
+                        la cantidad de cuotas</label>
+                      <label class="error" *ngIf="errorCardHolderType">{{errorCardHolderType}}</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix" *ngIf="visa">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="card_holder_doc_type">Monto Cuota Estimada</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+
+                    <div class="form-line input-field">
+
+                      <input type="text" id="monto_cuotas" class="form-control" readonly
+                             formControlName="monto_cuotas"
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="user_email">Email</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="user_email" class="form-control"
+                             formControlName="user_email" name="user_email"
+                             placeholder="Ingrese su dirección de email"
+                      >
+                    </div>
+                    <ng-container *ngIf="submitted">
+                      <label class="error"
+                             *ngIf="f.user_email.errors && f.user_email.errors.required">Ingrese su email</label>
+                      <label class="error"
+                             *ngIf="f.user_email.errors && f.user_email.errors.pattern">El formato
+                        del email es incorrecto</label>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-5 col-md-5">
+              <div class="row clearfix">
+                <div class="col-lg-4 col-md-4 col-sm-5 col-xs-5 form-control-label">
+                  <label for="total_operacion">Total Operación ($)</label>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-7 col-xs-7">
+                  <div class="form-group">
+                    <div class="form-line input-field">
+                      <input type="text" id="total_operacion" class="form-control" readonly
+                             formControlName="total_operacion" name="total_operacion"
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row clearfix">
+            <div class="col-lg-5 col-md-5">
+            </div>
+            <div class="col-lg-5 col-md-5">
+              <app-loading-button [title]="'CANCELAR'"
+                                  [type]="'button'"
+                                  [buttonColor]="'info'"
+                                  (click)="cancelar();"
+                                  [disabled]="loading"
+                                  class="pull-right"
+              ></app-loading-button>
+              <app-loading-button [title]="'PAGAR'" [loading]="loading" [disabled]="disabled" class="pull-right m-r-15"></app-loading-button>
+            </div>
+            <div class="col">
+              <div class="pull-right"><img src="assets/images/decidir.png" style="width: 50px"/></div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

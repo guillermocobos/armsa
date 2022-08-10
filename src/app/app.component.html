@@ -1,0 +1,25 @@
+<app-loader [showLoadingIndicator]="showLoadingIndicatior"></app-loader>
+<div class="overlay"></div>
+<!-- #END# Overlay For Sidebars -->
+<!-- Search Bar -->
+<ng-container *ngIf="!standalone">
+<div class="flex-wrapper">
+  <div id="main-component">
+      <app-header></app-header>
+      <div>
+          <app-left-sidebar></app-left-sidebar>
+
+          <app-right-sidebar></app-right-sidebar>
+      </div>
+      <router-outlet></router-outlet>
+  </div>
+  <app-footer></app-footer>
+</div>
+</ng-container>
+
+<ng-container *ngIf="standalone">
+  <div class="standalone">
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>
+
